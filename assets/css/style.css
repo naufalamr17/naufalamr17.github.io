@@ -1,0 +1,662 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --bg-dark: #050505;
+    --accent: #3b82f6;
+    --accent-glow: rgba(59, 130, 246, 0.5);
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --fg-main: #ffffff;
+    --fg-muted: #a1a1aa;
+    --font-main: 'Space Grotesk', sans-serif;
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --dock-width: 80px;
+    --dock-expanded: 240px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--fg-main);
+    font-family: var(--font-main);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    min-height: 200vh;
+}
+
+h1, h2, h3, h4, p, span {
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+/* ============================================================
+   MESH BACKGROUND
+   ============================================================ */
+.mesh-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    background: radial-gradient(circle at 50% 50%, #0a0a0a 0%, #050505 100%);
+}
+
+.mesh-blob {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    filter: blur(80px);
+    opacity: 0.15;
+    animation: float 20s infinite alternate;
+}
+
+.blob-1 {
+    top: -10%;
+    left: -10%;
+    animation-delay: 0s;
+}
+
+.blob-2 {
+    bottom: -10%;
+    right: -10%;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+    animation-delay: -5s;
+}
+
+@keyframes float {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(100px, 50px) scale(1.1); }
+}
+
+/* ============================================================
+   NOISE OVERLAY
+   ============================================================ */
+.noise {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://grainy-gradients.vercel.app/noise.svg');
+    opacity: 0.04;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ============================================================
+   FLOATING DOCK
+   ============================================================ */
+.dock-container {
+    position: fixed;
+    top: 50%;
+    left: 2rem;
+    transform: translateY(-50%);
+    z-index: 1001;
+}
+
+.dock {
+    background: rgba(15, 15, 15, 0.7);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: var(--dock-width);
+    overflow: hidden;
+}
+
+.dock:hover {
+    width: var(--dock-expanded);
+}
+
+.dock-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    color: var(--fg-muted);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+    white-space: nowrap;
+    border: 1px solid transparent;
+}
+
+.dock-item i {
+    font-size: 1.25rem;
+    min-width: 24px;
+    text-align: center;
+}
+
+.dock-item span {
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.dock:hover .dock-item span {
+    opacity: 1;
+}
+
+.dock-item:hover,
+.dock-item.active {
+    background: var(--glass-bg);
+    color: var(--fg-main);
+    border-color: var(--glass-border);
+}
+
+.dock-item.active i {
+    color: var(--accent);
+    filter: drop-shadow(0 0 5px var(--accent));
+}
+
+/* ============================================================
+   TOP HUD
+   ============================================================ */
+.hud-bar {
+    position: fixed;
+    top: 2rem;
+    left: 120px;
+    right: 2rem;
+    height: 60px;
+    background: rgba(15, 15, 15, 0.7);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    font-family: monospace;
+    font-size: 0.75rem;
+    color: var(--fg-muted);
+}
+
+.hud-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.hud-loc {
+    margin-left: 2rem;
+    opacity: 0.5;
+}
+
+#live-clock {
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    flex-shrink: 0;
+    background: #10b981;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #10b981;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%   { transform: scale(1);   opacity: 1; }
+    50%  { transform: scale(1.5); opacity: 0.5; }
+    100% { transform: scale(1);   opacity: 1; }
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+.main-wrapper {
+    margin-left: 140px;
+    padding: 8rem 4rem 4rem;
+}
+
+/* ============================================================
+   BENTO PANELS
+   ============================================================ */
+.bento-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: 4rem;
+    margin-bottom: 4rem;
+    transition: border-color 0.3s;
+}
+
+.bento-panel:hover {
+    border-color: rgba(59, 130, 246, 0.2);
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+h1 {
+    font-size: clamp(3rem, 10vw, 7rem);
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    line-height: 0.9;
+    margin-bottom: 2rem;
+}
+
+.accent-text {
+    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.section-title {
+    margin-bottom: 2rem;
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero-tagline {
+    font-size: 1.5rem;
+    color: var(--fg-muted);
+    max-width: 600px;
+    margin-bottom: 3rem;
+}
+
+.hero-btns {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn-hero {
+    padding: 1rem 2rem;
+}
+
+/* ============================================================
+   ABOUT
+   ============================================================ */
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+}
+
+.tag-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+/* ============================================================
+   PROJECTS
+   ============================================================ */
+.projects-section {
+    margin-top: 10rem;
+}
+
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.5rem;
+}
+
+.project-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    transition: all 0.3s;
+    overflow: hidden;
+}
+
+.project-card:hover {
+    background: rgba(59, 130, 246, 0.05);
+    border-color: var(--accent);
+    transform: translateY(-5px);
+}
+
+.project-img-container {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+}
+
+.project-img-sm {
+    aspect-ratio: 16 / 11;
+}
+
+.project-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.project-card:hover .project-img-container img {
+    transform: scale(1.05);
+}
+
+.img-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.4), transparent);
+    pointer-events: none;
+}
+
+.card-index {
+    font-size: 0.8rem;
+    font-weight: 800;
+    display: block;
+}
+
+.card-index-sm {
+    font-size: 0.7rem;
+    font-weight: 800;
+    display: block;
+}
+
+.card-desc {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+.card-desc-sm {
+    font-size: 0.8rem;
+    margin-top: 0.3rem;
+    opacity: 0.7;
+}
+
+h3 {
+    margin-top: 0.5rem;
+}
+
+h4 {
+    margin-top: 0.5rem;
+}
+
+.tech-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 6px;
+    color: var(--fg-muted);
+}
+
+/* ============================================================
+   GITHUB SECTION
+   ============================================================ */
+.github-section {
+    margin-top: 10rem;
+}
+
+.github-graph {
+    width: 100%;
+    margin-top: 2rem;
+}
+
+/* ============================================================
+   CONTACT SECTION
+   ============================================================ */
+.contact-section {
+    margin-top: 10rem;
+    text-align: center;
+}
+
+.contact-heading {
+    font-size: clamp(3rem, 8vw, 5rem);
+    margin-bottom: 2.5rem;
+    letter-spacing: -0.04em;
+}
+
+.contact-heading-link {
+    color: inherit;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.contact-heading-link:hover {
+    opacity: 0.8;
+}
+
+.contact-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.contact-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem 2.75rem;
+    font-size: 1.1rem;
+    font-family: monospace;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--fg-muted);
+    text-decoration: none;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    transition: all 0.25s;
+    white-space: nowrap;
+}
+
+.contact-btn:hover {
+    color: var(--fg-main);
+    background: rgba(59, 130, 246, 0.08);
+    border-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(59, 130, 246, 0.2);
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.site-footer {
+    margin-top: 10rem;
+    padding: 4rem 0;
+    border-top: 1px solid var(--glass-border);
+    color: var(--fg-muted);
+    font-size: 0.8rem;
+    font-family: monospace;
+    text-align: center;
+}
+
+/* ============================================================
+   UTILS
+   ============================================================ */
+.hide-mobile {
+    display: flex;
+}
+
+.animate-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ============================================================
+   RESPONSIVE — TABLET & MOBILE  (max-width: 1024px)
+   ============================================================ */
+@media (max-width: 1024px) {
+
+    .hide-mobile {
+        display: none !important;
+    }
+
+    /* Dock moves to bottom center */
+    .dock-container {
+        top: auto;
+        bottom: 1.5rem;
+        left: 0;
+        right: 0;
+        transform: none;
+        display: flex;
+        justify-content: center;
+        z-index: 1001;
+    }
+
+    .dock {
+        flex-direction: row;
+        width: auto !important;
+        padding: 0.5rem 0.75rem;
+        border-radius: 50px;
+        background: rgba(10, 10, 10, 0.92);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+    }
+
+    .dock:hover {
+        width: auto !important;
+    }
+
+    .dock-item span {
+        display: none !important;
+    }
+
+    .dock-item {
+        padding: 0.75rem;
+    }
+
+    /* Hero buttons stack */
+    .hero-btns {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.75rem;
+    }
+
+    .hero-btns a {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+
+    /* HUD simplified */
+    .hud-bar {
+        left: 1rem;
+        right: 1rem;
+        top: 1rem;
+        height: 48px;
+        padding: 0 1rem;
+        font-size: 0.68rem;
+    }
+
+    /* Main wrapper: no left margin */
+    .main-wrapper {
+        margin-left: 0;
+        padding: 5rem 1.25rem 7rem;
+    }
+
+    /* Bento panels: reduced padding */
+    .bento-panel {
+        padding: 2rem 1.25rem;
+        margin-bottom: 2rem;
+        border-radius: var(--radius-md);
+    }
+
+    /* Grids collapse to 1 column */
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    /* Section margins */
+    .projects-section,
+    .github-section,
+    .contact-section {
+        margin-top: 4rem;
+    }
+
+    /* Contact section */
+    .contact-heading {
+        font-size: 2.5rem;
+    }
+
+    .contact-buttons {
+        gap: 1rem;
+    }
+
+    .contact-btn {
+        padding: 1rem 1.75rem;
+        font-size: 0.95rem;
+    }
+
+    /* Footer */
+    .site-footer {
+        margin-top: 4rem;
+        padding: 2rem 0;
+    }
+
+    /* Headings */
+    h1 {
+        font-size: clamp(2.5rem, 9vw, 4rem);
+    }
+
+    h2 {
+        font-size: 1.6rem;
+    }
+
+    /* Project grid collapses */
+    .project-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    .project-card {
+        width: 100%;
+        padding: 1rem;
+    }
+}
+
+/* ============================================================
+   RESPONSIVE — PHONES  (max-width: 480px)
+   ============================================================ */
+@media (max-width: 480px) {
+    .hud-bar {
+        justify-content: space-between;
+    }
+
+    h1 {
+        font-size: 2.4rem;
+    }
+
+    .contact-heading {
+        font-size: 2rem;
+    }
+
+    .contact-btn {
+        width: 100%;
+    }
+}

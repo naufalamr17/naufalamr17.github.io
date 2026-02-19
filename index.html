@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Naufal Ammar Hidayatulloh | Web Dev</title>
+    <meta
+      name="description"
+      content="Naufal Ammar Hidayatulloh - Web Developer."
+    />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+  <body>
+    <div class="noise"></div>
+    <div class="mesh-bg">
+      <div class="mesh-blob blob-1"></div>
+      <div class="mesh-blob blob-2"></div>
+    </div>
+
+    <!-- FLOATING DOCK -->
+    <div class="dock-container">
+      <nav class="dock">
+        <a href="#intro" class="dock-item active" title="Introduction">
+          <i data-lucide="home"></i>
+          <span>Home</span>
+        </a>
+        <a href="#about" class="dock-item" title="About Me">
+          <i data-lucide="user"></i>
+          <span>About</span>
+        </a>
+        <a href="#projects" class="dock-item" title="Case Studies">
+          <i data-lucide="layout-grid"></i>
+          <span>Projects</span>
+        </a>
+        <a href="#github" class="dock-item" title="Activity">
+          <i data-lucide="github"></i>
+          <span>Activity</span>
+        </a>
+        <a href="#contact" class="dock-item" title="Connect">
+          <i data-lucide="send"></i>
+          <span>Connect</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- HUD BAR -->
+    <header class="hud-bar">
+      <div class="hud-status">
+        <div class="status-dot"></div>
+        <span class="hide-mobile">SYSTEM_ONLINE: VERSION_1.7.0</span>
+        <span class="hide-mobile hud-loc">LOC: JKT/IDN</span>
+      </div>
+      <div id="live-clock">00:00:00</div>
+    </header>
+
+    <main class="main-wrapper">
+      <!-- INTRO -->
+      <section id="intro" class="bento-panel animate-in">
+        <h1>Naufal <span class="accent-text">Ammar H</span></h1>
+        <p class="hero-tagline">
+          I design and develop enterprise web applications that simplify complex
+          workflows and solve real operational problems.
+        </p>
+        <div class="hero-btns">
+          <a href="#projects" class="dock-item active btn-hero">VIEW_PROTOCOLS</a>
+          <a href="#contact" class="dock-item btn-hero">INITIATE_COMMS</a>
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section id="about" class="bento-panel animate-in">
+        <h2 class="section-title">Architectural_Philosophy</h2>
+        <div class="about-grid">
+          <p style="color: var(--fg-muted)">
+            I build web applications with a strong focus on clarity,
+            reliability, and real-world usability. By translating complex
+            workflows into structured digital solutions, I help teams work more
+            efficiently.
+          </p>
+          <div class="tag-group">
+            <span class="tech-tag">LARAVEL_ENT</span>
+            <span class="tech-tag">MICROSOFT_SSO</span>
+            <span class="tech-tag">SMTP_AUTOMATION</span>
+            <span class="tech-tag">OCR_TESSERACT</span>
+            <span class="tech-tag">DOCKER_DEPS</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROJECTS SYMMETRICAL GRID -->
+      <section id="projects" class="projects-section">
+        <h2 class="animate-in section-title">CORE_CASE_STUDIES</h2>
+        <div class="project-grid">
+          <!-- ROW 1 -->
+          <div class="project-card animate-in" style="grid-column: span 6">
+            <div class="project-img-container">
+              <img src="assets/images/ams.png" alt="Asset Management System Screenshot" />
+              <div class="img-overlay"></div>
+            </div>
+            <div>
+              <span class="card-index accent-text">[01]</span>
+              <h3>Asset Management System</h3>
+              <p class="card-desc">
+                Enterprise-grade internal asset inventory and tracking system
+                integrated with corporate security.
+              </p>
+              <div class="tag-group">
+                <span class="tech-tag">LARAVEL</span>
+                <span class="tech-tag">MICROSOFT_SSO</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-card animate-in" style="grid-column: span 6">
+            <div class="project-img-container">
+              <img src="assets/images/tms.png" alt="Travel Management System Screenshot" />
+              <div class="img-overlay"></div>
+            </div>
+            <div>
+              <span class="card-index accent-text">[02]</span>
+              <h3>Travel Management System</h3>
+              <p class="card-desc">
+                Digital workflow for business travel requests, approvals, and
+                expense tracking.
+              </p>
+              <div class="tag-group">
+                <span class="tech-tag">LARAVEL</span>
+                <span class="tech-tag">SMTP</span>
+                <span class="tech-tag">MICROSOFT_SSO</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ROW 2 -->
+          <div class="project-card animate-in" style="grid-column: span 6">
+            <div class="project-img-container">
+              <img src="assets/images/sipawas.png" alt="Sipawas HSE Screenshot" />
+              <div class="img-overlay"></div>
+            </div>
+            <div>
+              <span class="card-index accent-text">[03]</span>
+              <h3>Sipawas HSE</h3>
+              <p class="card-desc">
+                Integrated Workplace Safety Monitoring System for real-time
+                reporting and compliance auditing.
+              </p>
+              <div class="tag-group">
+                <span class="tech-tag">LARAVEL</span>
+                <span class="tech-tag">TAILWIND_CSS</span>
+                <span class="tech-tag">SMTP</span>
+                <span class="tech-tag">MICROSOFT_SSO</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-card animate-in" style="grid-column: span 6">
+            <div class="project-img-container">
+              <img src="assets/images/cv.png" alt="CV Screener System Screenshot" />
+              <div class="img-overlay"></div>
+            </div>
+            <div>
+              <span class="card-index accent-text">[04]</span>
+              <h3>CV Screener System</h3>
+              <p class="card-desc">
+                AI-assisted recruitment tool that extracts candidate data using
+                high-speed OCR technology.
+              </p>
+              <div class="tag-group">
+                <span class="tech-tag">JAVASCRIPT</span>
+                <span class="tech-tag">VITE</span>
+                <span class="tech-tag">TESSERACT_OCR</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ROW 3 -->
+          <div class="project-card animate-in" style="grid-column: span 4">
+            <div class="project-img-container project-img-sm">
+              <img src="assets/images/mlpmining.png" alt="MLP Mining Screenshot" />
+            </div>
+            <div>
+              <span class="card-index-sm accent-text">[05]</span>
+              <h4>MLP Mining</h4>
+              <p class="card-desc-sm">Corporate Profile operations.</p>
+              <div class="tag-group" style="margin-top: 0.75rem">
+                <span class="tech-tag">WORDPRESS</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-card animate-in" style="grid-column: span 4">
+            <div class="project-img-container project-img-sm">
+              <img src="assets/images/kesmining.png" alt="KES Mining Screenshot" />
+            </div>
+            <div>
+              <span class="card-index-sm accent-text">[06]</span>
+              <h4>KES Mining</h4>
+              <p class="card-desc-sm">Safety Standards portfolio.</p>
+              <div class="tag-group" style="margin-top: 0.75rem">
+                <span class="tech-tag">WORDPRESS</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-card animate-in" style="grid-column: span 4">
+            <div class="project-img-container project-img-sm">
+              <img src="assets/images/safa.png" alt="Safa Victory Steel Screenshot" />
+            </div>
+            <div>
+              <span class="card-index-sm accent-text">[07]</span>
+              <h4>Safa Victory Steel</h4>
+              <p class="card-desc-sm">Industrial Product Catalog.</p>
+              <div class="tag-group" style="margin-top: 0.75rem">
+                <span class="tech-tag">WORDPRESS</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- GITHUB -->
+      <section id="github" class="bento-panel animate-in github-section">
+        <h2>ACTIVITY_MONITOR</h2>
+        <img
+          src="https://github-readme-activity-graph.vercel.app/graph?username=naufalamr17&theme=react-dark&bg_color=00000000&hide_border=true&color=3b82f6"
+          class="github-graph"
+          alt="GitHub Activity Graph"
+        />
+      </section>
+
+      <!-- CONTACT -->
+      <section id="contact" class="contact-section animate-in">
+        <h2 class="contact-heading">
+          <a
+            href="mailto:amr.naufal17@gmail.com"
+            target="_blank"
+            class="contact-heading-link"
+          >LET'S_SYNC</a>
+        </h2>
+        <div class="contact-buttons">
+          <a
+            href="mailto:amr.naufal17@gmail.com"
+            target="_blank"
+            class="contact-btn"
+          >EMAIL</a>
+          <a
+            href="https://github.com/naufalamr17"
+            target="_blank"
+            class="contact-btn"
+          >GITHUB</a>
+          <a
+            href="https://www.linkedin.com/in/naufalamr17/"
+            target="_blank"
+            class="contact-btn"
+          >LINKEDIN</a>
+        </div>
+      </section>
+
+      <footer class="site-footer">
+        &copy; 2026 NAUFAL_AMMAR_H // WEB_DEV_PORTFOLIO // JKT_IDN
+      </footer>
+    </main>
+
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>
