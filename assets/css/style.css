@@ -23,6 +23,7 @@
 
 html {
     scroll-behavior: smooth;
+    scroll-padding-top: 140px;
 }
 
 body {
@@ -34,7 +35,12 @@ body {
     min-height: 200vh;
 }
 
-h1, h2, h3, h4, p, span {
+h1,
+h2,
+h3,
+h4,
+p,
+span {
     overflow-wrap: break-word;
     word-break: break-word;
 }
@@ -77,8 +83,13 @@ h1, h2, h3, h4, p, span {
 }
 
 @keyframes float {
-    from { transform: translate(0, 0) scale(1); }
-    to   { transform: translate(100px, 50px) scale(1.1); }
+    from {
+        transform: translate(0, 0) scale(1);
+    }
+
+    to {
+        transform: translate(100px, 50px) scale(1.1);
+    }
 }
 
 /* ============================================================
@@ -216,9 +227,20 @@ h1, h2, h3, h4, p, span {
 }
 
 @keyframes pulse {
-    0%   { transform: scale(1);   opacity: 1; }
-    50%  { transform: scale(1.5); opacity: 0.5; }
-    100% { transform: scale(1);   opacity: 1; }
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.5);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 /* ============================================================
@@ -238,8 +260,13 @@ h1, h2, h3, h4, p, span {
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-lg);
     padding: 4rem;
-    margin-bottom: 4rem;
+    margin-bottom: 10rem;
     transition: border-color 0.3s;
+}
+
+/* Scroll offset for fixed HUD bar */
+section {
+    scroll-margin-top: 140px;
 }
 
 .bento-panel:hover {
@@ -312,17 +339,17 @@ h1 {
 .project-grid {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    gap: 1.5rem;
+    gap: 2.5rem;
 }
 
 .project-card {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-md);
-    padding: 1.5rem;
+    padding: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 2rem;
     transition: all 0.3s;
     overflow: hidden;
 }
@@ -405,6 +432,10 @@ h4 {
     border: 1px solid var(--glass-border);
     border-radius: 6px;
     color: var(--fg-muted);
+}
+
+.tag-group {
+    margin-top: 1.5rem;
 }
 
 /* ============================================================
