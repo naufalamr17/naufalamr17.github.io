@@ -21,9 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- SIDEBAR ACTIVE STATE LOGIC ---
-    const animateElements = document.querySelectorAll('.animate-in');
+    const sections = document.querySelectorAll('section[id]');
     const dockNavItems = document.querySelectorAll('.dock .dock-item');
     let isManualScrolling = false;
+
+    // Responsive scroll offset
+    const getScrollOffset = () => window.innerWidth <= 1024 ? 80 : 140;
 
     // Helper to set active dock item
     const setActiveDockItem = (targetId) => {
@@ -37,48 +40,48 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    const observer = new IntersectionObserver((entries) => {
+    // Scroll-based active section detection (picks ONE closest section)
+    const updateActiveSection = () => {
         if (isManualScrolling) return;
 
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-
-                if (entry.target.tagName === 'SECTION') {
-                    setActiveDockItem(entry.target.id);
-                }
-            }
-        });
-    }, {
-        threshold: 0.2, // More sensitive
-        rootMargin: '-10% 0px -40% 0px' 
-    });
-
-    animateElements.forEach(el => observer.observe(el));
-
-    // Handle Page Bottom explicitly
-    window.addEventListener('scroll', () => {
-        if (isManualScrolling) return;
-        
-        // Detect if user has reached bottom (with some tolerance)
+        // Check if at page bottom first
         const scrollBottom = window.innerHeight + window.pageYOffset;
         const pageHeight = document.documentElement.scrollHeight;
-        
         if (scrollBottom >= pageHeight - 50) {
             setActiveDockItem('contact');
+            return;
         }
-    }, { passive: true });
+
+        // Find the section closest to the top of the viewport
+        const offset = getScrollOffset() + 20;
+        let currentSection = null;
+
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop - offset;
+            if (window.pageYOffset >= sectionTop) {
+                currentSection = section;
+            }
+        });
+
+        if (currentSection) {
+            setActiveDockItem(currentSection.id);
+        }
+    };
+
+    // Run on scroll (passive for performance)
+    window.addEventListener('scroll', updateActiveSection, { passive: true });
+    // Run once on load
+    updateActiveSection();
 
 
     // --- SMOOTH SCROLL LOGIC ---
-    const SCROLL_OFFSET = 140;
     const scrollToTarget = (targetId) => {
         const target = document.querySelector(targetId);
         if (target) {
             isManualScrolling = true;
             setActiveDockItem(targetId);
 
-            const top = target.getBoundingClientRect().top + window.scrollY - SCROLL_OFFSET;
+            const top = target.getBoundingClientRect().top + window.scrollY - getScrollOffset();
             window.scrollTo({ top, behavior: 'smooth' });
 
             setTimeout(() => {
