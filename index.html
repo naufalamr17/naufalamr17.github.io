@@ -1,264 +1,116 @@
 <!doctype html>
-<html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Naufal Ammar Hidayatulloh | Web Dev</title>
-    <meta
-      name="description"
-      content="Naufal Ammar Hidayatulloh - Web Developer."
-    />
-    <link rel="stylesheet" href="assets/css/style.css" />
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-  </head>
-  <body>
-    <div class="noise"></div>
-    <div class="mesh-bg">
-      <div class="mesh-blob blob-1"></div>
-      <div class="mesh-blob blob-2"></div>
-    </div>
-
-    <!-- FLOATING DOCK -->
-    <div class="dock-container">
-      <nav class="dock">
-        <a href="#intro" class="dock-item active" title="Introduction">
-          <i data-lucide="home"></i>
-          <span>Home</span>
-        </a>
-        <a href="#about" class="dock-item" title="About Me">
-          <i data-lucide="user"></i>
-          <span>About</span>
-        </a>
-        <a href="#projects" class="dock-item" title="Case Studies">
-          <i data-lucide="layout-grid"></i>
-          <span>Projects</span>
-        </a>
-        <a href="#github" class="dock-item" title="Activity">
-          <i data-lucide="github"></i>
-          <span>Activity</span>
-        </a>
-        <a href="#contact" class="dock-item" title="Connect">
-          <i data-lucide="send"></i>
-          <span>Connect</span>
-        </a>
-      </nav>
-    </div>
-
-    <!-- HUD BAR -->
-    <header class="hud-bar">
-      <div class="hud-status">
-        <div class="status-dot"></div>
-        <span class="hide-mobile">SYSTEM_ONLINE: VERSION_1.7.0</span>
-        <span class="hide-mobile hud-loc">LOC: JKT/IDN</span>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f8f8f3" />
+  <meta name="description" content="Naufal Ammar Hidayatulloh — web developer building considered digital experiences, enterprise applications, and document intelligence tools." />
+  <meta property="og:title" content="Naufal Ammar — Thoughtful code. Real-world impact." />
+  <meta property="og:description" content="Selected work in enterprise software, document intelligence, and the web." />
+  <meta property="og:type" content="website" />
+  <title>Naufal Ammar — Web Developer</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <script src="assets/js/main.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="loader" aria-hidden="true">
+    <img src="assets/wordmark.svg" width="196" height="82" alt="" />
+    <div class="loader-track"></div><span>Ideas taking shape.</span>
+  </div>
+  <header class="site-header">
+    <a class="brand" href="#intro" aria-label="Naufal Ammar, home"><img src="assets/wordmark.svg" alt="Naufal Ammar" width="120" height="50" /></a>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="navigation">Menu <span aria-hidden="true">＋</span></button>
+    <nav id="navigation" class="navigation" aria-label="Main navigation">
+      <div class="nav-left"><a href="#about">About</a><a href="#projects">Selected work</a><a href="#approach">Approach</a></div>
+      <div class="nav-right"><a href="https://github.com/naufalamr17" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a class="nav-contact" href="#contact">Let’s talk <span aria-hidden="true">↗</span></a></div>
+    </nav>
+  </header>
+  <main id="main">
+    <section class="hero" id="intro" aria-labelledby="hero-title">
+      <canvas id="particle-field" aria-hidden="true"></canvas>
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="square"></span>Naufal Ammar Hidayatulloh · Web developer</p>
+        <h1 id="hero-title">Thoughtful code.<br />Real-world<br /><em>impact.</em><span class="title-pixel" aria-hidden="true"></span></h1>
+        <div class="hero-bottom"><p>I turn complex workflows into clear,<br class="desktop-break" /> useful digital experiences.</p><a class="round-link" href="#projects"><span>Explore my work</span><span class="circle" aria-hidden="true">↘</span></a></div>
       </div>
-      <div id="live-clock">00:00:00</div>
-    </header>
+      <div class="hero-footer"><span>Based in Indonesia. Building for people.</span><span>Scroll to discover <span aria-hidden="true">↓</span></span></div>
+      <button id="motion-toggle" class="motion-toggle" type="button" aria-pressed="false" hidden>Pause motion</button>
+    </section>
+    <section class="intro-strip section-pad" id="about" aria-labelledby="about-title">
+      <p class="eyebrow reveal">01 / A little about me</p>
+      <div class="intro-content reveal"><h2 id="about-title">Good software should make<br />the complicated <em>feel simple.</em></h2><div class="intro-detail"><p>I’m Naufal, a web developer focused on the places where technology meets everyday work. I build applications that help teams manage operations, find information, and get things done.</p><p>From the first workflow to the final interface, I care about clarity, reliability, and the details that make a product useful.</p></div></div>
+      <ul class="expertise" aria-label="Areas of focus"><li>Enterprise applications</li><li>Document intelligence</li><li>Web experiences</li></ul>
+    </section>
+    <section class="work section-pad" id="projects" aria-labelledby="work-title">
+      <div class="section-heading reveal"><div><p class="eyebrow">02 / Selected work</p><h2 id="work-title">Built with purpose.</h2></div><p>A selection of systems and websites,<br />each solving a different kind of problem.</p></div>
+      <div class="work-toolbar"><div class="filters" role="group" aria-label="Filter projects" hidden><button class="active" data-filter="all" aria-pressed="true">All work</button><button data-filter="applications" aria-pressed="false">Applications</button><button data-filter="websites" aria-pressed="false">Websites</button></div><p class="preview-note"><span class="square"></span>Private apps, fictional data. Public sites, real previews.</p></div>
+      <p id="filter-status" class="sr-only" aria-live="polite"></p>
+      <div class="project-grid">
+        <article class="project-card featured reveal" data-category="applications">
+          <a class="project-visual docksy-visual" href="https://github.com/naufalamr17/docksy" target="_blank" rel="noopener noreferrer" aria-label="Open Docksy repository on GitHub">
+            <span class="image-label">Document intelligence · Sample data</span>
+            <img src="assets/previews/docksy.png" width="1440" height="900" alt="Reconstructed Docksy chat with a fictional team handbook and sample cited answer" loading="lazy" decoding="async" />
+            <span class="image-open" aria-hidden="true">↗</span>
+          </a>
+          <div class="project-info"><div><p class="project-type">01 / AI-powered workspace</p><h3>Docksy</h3><p>From scattered documents to answers with context. Semantic search and grounded conversations with your knowledge base.</p><ul class="tags"><li>Laravel</li><li>FastAPI</li><li>pgvector</li><li>Redis</li></ul></div><a class="text-link" href="https://github.com/naufalamr17/docksy" target="_blank" rel="noopener noreferrer">Explore repository <span aria-hidden="true">↗</span></a></div>
+        </article>
 
-    <main class="main-wrapper">
-      <!-- INTRO -->
-      <section id="intro" class="bento-panel animate-in">
-        <h1>Naufal <span class="accent-text">Ammar H</span></h1>
-        <p class="hero-tagline">
-          I design and develop enterprise web applications that simplify complex
-          workflows and solve real operational problems.
-        </p>
-        <div class="hero-btns">
-          <a href="#projects" class="dock-item active btn-hero">VIEW_PROTOCOLS</a>
-          <a href="#contact" class="dock-item btn-hero">INITIATE_COMMS</a>
-        </div>
-      </section>
+        <article class="project-card reveal" data-category="applications">
+          <a class="project-visual health-visual" href="assets/previews/health-portfolio.png" data-preview data-title="SaSehat" data-caption="Sanitized portfolio preview · Fictional data" aria-label="Enlarge SaSehat portfolio preview">
+            <span class="image-label">Connected clinic operations · Sample data</span>
+            <img src="assets/previews/health-portfolio.png" width="1440" height="900" alt="Sanitized SaSehat dashboard portfolio preview showing fictional sample data" loading="lazy" decoding="async" />
+            <span class="image-open" aria-hidden="true">↗</span>
+          </a>
+          <div class="project-info"><div><p class="project-type">02 / Clinic management</p><h3>SaSehat</h3><p>A clinical workspace connecting patient visits, medicine inventory, medical check-up follow-ups, and role-based access.</p><ul class="tags"><li>Laravel</li><li>Tailwind CSS</li><li>MySQL</li></ul></div></div>
+        </article>
 
-      <!-- ABOUT -->
-      <section id="about" class="bento-panel animate-in">
-        <h2 class="section-title">Architectural_Philosophy</h2>
-        <div class="about-grid">
-          <p style="color: var(--fg-muted)">
-            I build web applications with a strong focus on clarity,
-            reliability, and real-world usability. By translating complex
-            workflows into structured digital solutions, I help teams work more
-            efficiently.
-          </p>
-          <div class="tag-group">
-            <span class="tech-tag">LARAVEL_ENT</span>
-            <span class="tech-tag">MICROSOFT_SSO</span>
-            <span class="tech-tag">SMTP_AUTOMATION</span>
-            <span class="tech-tag">OCR_TESSERACT</span>
-            <span class="tech-tag">DOCKER_DEPS</span>
-          </div>
-        </div>
-      </section>
+        <article class="project-card reveal" data-category="applications">
+          <a class="project-visual safety-visual" href="assets/previews/safety-portfolio.png" data-preview data-title="SIPAWAS" data-caption="Sanitized portfolio preview · Fictional data" aria-label="Enlarge SIPAWAS portfolio preview">
+            <span class="image-label">Safer operations · Sample data</span>
+            <img src="assets/previews/safety-portfolio.png" width="1440" height="900" alt="Sanitized SIPAWAS dashboard portfolio preview showing fictional sample data" loading="lazy" decoding="async" />
+            <span class="image-open" aria-hidden="true">↗</span>
+          </a>
+          <div class="project-info"><div><p class="project-type">03 / Safety & compliance</p><h3>SIPAWAS</h3><p>Inspections, corrective actions, training, and weekly reporting in one workspace for safety teams.</p><ul class="tags"><li>Laravel</li><li>Tailwind CSS</li><li>Reporting</li></ul></div></div>
+        </article>
 
-      <!-- PROJECTS SYMMETRICAL GRID -->
-      <section id="projects" class="projects-section animate-in">
-        <h2 class="animate-in section-title">CORE_CASE_STUDIES</h2>
-        <div class="project-grid">
-          <!-- ROW 1 -->
-          <div class="project-card animate-in" style="grid-column: span 6">
-            <div class="project-img-container">
-              <img src="assets/images/ams.png" alt="Asset Management System Screenshot" />
-              <div class="img-overlay"></div>
-            </div>
-            <div>
-              <span class="card-index accent-text">[01]</span>
-              <h3>Asset Management System</h3>
-              <p class="card-desc">
-                Enterprise asset inventory and lifecycle tracking system with role-based access control and secure Microsoft SSO integration.
-              </p>
-              <div class="tag-group">
-                <span class="tech-tag">LARAVEL</span>
-                <span class="tech-tag">MICROSOFT_SSO</span>
-              </div>
-            </div>
-          </div>
+        <article class="project-card featured reveal" data-category="applications">
+          <a class="project-visual permits-visual" href="assets/previews/permits-portfolio.png" data-preview data-title="SIPENA" data-caption="Sanitized portfolio preview · Fictional data" aria-label="Enlarge SIPENA portfolio preview">
+            <span class="image-label">Clarity in compliance · Sample data</span>
+            <img src="assets/previews/permits-portfolio.png" width="1440" height="900" alt="Sanitized SIPENA dashboard portfolio preview showing fictional sample data" loading="lazy" decoding="async" />
+            <span class="image-open" aria-hidden="true">↗</span>
+          </a>
+          <div class="project-info"><div><p class="project-type">04 / Permits & obligations</p><h3>SIPENA</h3><p>Tracking permits, renewals, reporting and payment obligations, with document archives and timely reminders.</p><ul class="tags"><li>Laravel</li><li>Tailwind CSS</li><li>Reminders</li></ul></div></div>
+        </article>
 
-          <div class="project-card animate-in" style="grid-column: span 6">
-            <div class="project-img-container">
-              <img src="assets/images/tms.png" alt="Travel Management System Screenshot" />
-              <div class="img-overlay"></div>
-            </div>
-            <div>
-              <span class="card-index accent-text">[02]</span>
-              <h3>Travel Management System</h3>
-              <p class="card-desc">
-                Centralized business travel management platform covering multi-trip requests, approvals, cost calculation, and automated notifications.
-              </p>
-              <div class="tag-group">
-                <span class="tech-tag">LARAVEL</span>
-                <span class="tech-tag">SMTP</span>
-                <span class="tech-tag">MICROSOFT_SSO</span>
-              </div>
-            </div>
-          </div>
+        <article class="project-card reveal" data-category="websites">
+          <a class="project-visual mlp-visual" href="https://mlpmining.com/" target="_blank" rel="noopener noreferrer" aria-label="Open MLP Mining website">
+            <span class="image-label">Corporate storytelling · Public website</span>
+            <img src="assets/previews/mlp.jpg" width="1440" height="900" alt="Screenshot of the public MLP Mining homepage" loading="lazy" decoding="async" />
+            <span class="image-open" aria-hidden="true">↗</span>
+          </a>
+          <div class="project-info"><div><p class="project-type">05 / Public company website</p><h3>MLP Mining</h3><p>A corporate website presenting the company, mining operations, sustainability commitments, and news.</p><ul class="tags"><li>Company profile</li><li>Responsive website</li></ul></div><a class="text-link" href="https://mlpmining.com/" target="_blank" rel="noopener noreferrer">Visit website <span aria-hidden="true">↗</span></a></div>
+        </article>
 
-          <!-- ROW 2 -->
-          <div class="project-card animate-in" style="grid-column: span 6">
-            <div class="project-img-container">
-              <img src="assets/images/sipawas.png" alt="Sipawas HSE Screenshot" />
-              <div class="img-overlay"></div>
-            </div>
-            <div>
-              <span class="card-index accent-text">[03]</span>
-              <h3>Sipawas</h3>
-              <p class="card-desc">
-                Digital HSE monitoring system enabling real-time safety inspections, incident reporting, and compliance oversight.
-              </p>
-              <div class="tag-group">
-                <span class="tech-tag">LARAVEL</span>
-                <span class="tech-tag">TAILWIND_CSS</span>
-                <span class="tech-tag">SMTP</span>
-                <span class="tech-tag">MICROSOFT_SSO</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="project-card animate-in" style="grid-column: span 6">
-            <div class="project-img-container">
-              <img src="assets/images/cv.png" alt="CV Screener System Screenshot" />
-              <div class="img-overlay"></div>
-            </div>
-            <div>
-              <span class="card-index accent-text">[04]</span>
-              <h3>CV Screener System</h3>
-              <p class="card-desc">
-                Automated CV screening tool leveraging OCR to extract, parse, and score candidate data efficiently.
-              </p>
-              <div class="tag-group">
-                <span class="tech-tag">JAVASCRIPT</span>
-                <span class="tech-tag">VITE</span>
-                <span class="tech-tag">TESSERACT_OCR</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- ROW 3 -->
-          <div class="project-card animate-in" style="grid-column: span 4">
-            <div class="project-img-container project-img-sm">
-              <img src="assets/images/mlpmining.png" alt="MLP Mining Screenshot" />
-            </div>
-            <div>
-              <span class="card-index-sm accent-text">[05]</span>
-              <h4>MLP Mining</h4>
-              <p class="card-desc-sm">Corporate company profile.</p>
-              <div class="tag-group">
-                <span class="tech-tag">WORDPRESS</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="project-card animate-in" style="grid-column: span 4">
-            <div class="project-img-container project-img-sm">
-              <img src="assets/images/kesmining.png" alt="KES Mining Screenshot" />
-            </div>
-            <div>
-              <span class="card-index-sm accent-text">[06]</span>
-              <h4>KES Mining</h4>
-              <p class="card-desc-sm">Corporate company profile.</p>
-              <div class="tag-group">
-                <span class="tech-tag">WORDPRESS</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="project-card animate-in" style="grid-column: span 4">
-            <div class="project-img-container project-img-sm">
-              <img src="assets/images/safa.png" alt="Safa Victory Steel Screenshot" />
-            </div>
-            <div>
-              <span class="card-index-sm accent-text">[07]</span>
-              <h4>Safa Victory Steel</h4>
-              <p class="card-desc-sm">Corporate company profile.</p>
-              <div class="tag-group">
-                <span class="tech-tag">WORDPRESS</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- GITHUB -->
-      <section id="github" class="bento-panel animate-in github-section">
-        <h2>ACTIVITY_MONITOR</h2>
-        <img
-          src="https://github-readme-activity-graph.vercel.app/graph?username=naufalamr17&theme=react-dark&bg_color=00000000&hide_border=true&color=3b82f6"
-          class="github-graph"
-          alt="GitHub Activity Graph"
-        />
-      </section>
-
-      <!-- CONTACT -->
-      <section id="contact" class="contact-section animate-in">
-        <h2 class="contact-heading">
-          <a
-            href="mailto:amr.naufal17@gmail.com"
-            target="_blank"
-            class="contact-heading-link"
-          >LET'S_SYNC</a>
-        </h2>
-        <div class="contact-buttons">
-          <a
-            href="mailto:amr.naufal17@gmail.com"
-            target="_blank"
-            class="contact-btn"
-          >EMAIL</a>
-          <a
-            href="https://github.com/naufalamr17"
-            target="_blank"
-            class="contact-btn"
-          >GITHUB</a>
-          <a
-            href="https://www.linkedin.com/in/naufalamr17/"
-            target="_blank"
-            class="contact-btn"
-          >LINKEDIN</a>
-        </div>
-      </section>
-
-      <footer class="site-footer">
-        &copy; 2026 NAUFAL_AMMAR_H // WEB_DEV_PORTFOLIO // JKT_IDN
-      </footer>
-    </main>
-
-    <script src="assets/js/main.js"></script>
-  </body>
+        <article class="project-card reveal" data-category="websites">
+          <a class="project-visual par-visual" href="https://www.pararthala.com/" target="_blank" rel="noopener noreferrer" aria-label="Open PAR Arthala website">
+            <span class="image-label">Industrial expertise · Public website</span>
+            <img src="assets/previews/par.jpg" width="1440" height="900" alt="Screenshot of the public PAR Arthala homepage" loading="lazy" decoding="async" />
+            <span class="image-open" aria-hidden="true">↗</span>
+          </a>
+          <div class="project-info"><div><p class="project-type">06 / Public company website</p><h3>PAR Arthala</h3><p>A company and product website presenting fuel and oil filtration systems, industry applications, and project experience.</p><ul class="tags"><li>Company profile</li><li>Product showcase</li></ul></div><a class="text-link" href="https://www.pararthala.com/" target="_blank" rel="noopener noreferrer">Visit website <span aria-hidden="true">↗</span></a></div>
+        </article>
+      </div>
+      <p class="confidentiality">Private application previews are reconstructed with fictional records, people, documents, and figures. They do not represent production data or measured results. MLP Mining and PAR Arthala images show their publicly accessible websites.</p>
+    </section>
+    <section class="approach section-pad" id="approach" aria-labelledby="approach-title">
+      <div class="section-heading reveal"><div><p class="eyebrow">03 / How I work</p><h2 id="approach-title">Understand first.<br /><em>Build with intention.</em></h2></div><p>The best solution starts with<br />the right understanding.</p></div>
+      <div class="approach-grid"><article class="reveal"><span>01</span><h3>Understand the work.</h3><p>Learn the people, the process, and the friction. Turn real needs into a clear scope.</p></article><article class="reveal"><span>02</span><h3>Make it feel simple.</h3><p>Shape the workflow and interface together. Give each action a clear place and purpose.</p></article><article class="reveal"><span>03</span><h3>Build. Test. Refine.</h3><p>Connect the system, check the details, and keep improving how it works in practice.</p></article></div>
+    </section>
+    <section class="contact section-pad" id="contact" aria-labelledby="contact-title"><p class="eyebrow reveal">04 / Start a conversation</p><div class="contact-main reveal"><h2 id="contact-title">Have something<br />in <em>mind?</em></h2><a class="contact-arrow" href="mailto:amr.naufal17@gmail.com" aria-label="Email Naufal Ammar">↗</a></div><div class="contact-bottom"><p>Let’s turn it into something useful.</p><a href="mailto:amr.naufal17@gmail.com">amr.naufal17@gmail.com <span aria-hidden="true">↗</span></a></div></section>
+  </main>
+  <footer class="site-footer"><a href="#intro" aria-label="Back to top"><img src="assets/wordmark.svg" alt="Naufal Ammar" width="100" height="42" /></a><p>© <span id="year">2026</span> Naufal Ammar Hidayatulloh</p><div><a href="https://github.com/naufalamr17" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/naufalamr17/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="#intro">Back to top ↑</a></div></footer>
+  <dialog id="preview-dialog" aria-labelledby="preview-title"><div class="dialog-top"><div><h2 id="preview-title">Project preview</h2><p id="preview-caption">Reconstructed interface · Fictional data</p></div><button class="dialog-close" aria-label="Close preview">Close <span aria-hidden="true">×</span></button></div><img id="preview-image" alt="" width="1440" height="900" /></dialog>
+</body>
 </html>

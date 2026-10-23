@@ -1,0 +1,126 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const http = require('node:http');
+const { chromium } = require(process.argv[2] || 'playwright-core');
+const root = path.resolve(__dirname, '..');
+const qa = path.join(root, '.preview');
+fs.mkdirSync(qa, { recursive:true });
+const types = {'.html':'text/html','.css':'text/css','.js':'text/javascript','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg'};
+const server = http.createServer((req,res) => {
+  const pathname = decodeURIComponent(new URL(req.url,'http://localhost').pathname);
+  const file = path.resolve(root, '.' + (pathname === '/' ? '/index.html' : pathname));
+  if (req.method !== 'GET' || !file.startsWith(root + path.sep) || (file !== path.join(root,'index.html') && !file.startsWith(path.join(root,'assets') + path.sep))) { res.writeHead(403).end(); return; }
+  if (!fs.existsSync(file) || !fs.statSync(file).isFile()) { res.writeHead(404).end(); return; }
+  res.writeHead(200, {'Content-Type':types[path.extname(file)] || 'application/octet-stream'});
+  fs.createReadStream(file).pipe(res);
+});
+(async () => {
+  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+  const url=`http://127.0.0.1:${server.address().port}`;
+  let browser;
+  const checks=[];
+  try {
+    browser=await chromium.launch({headless:true,...(process.argv[3]?{executablePath:process.argv[3]}:{})});
+    const context=await browser.newContext({viewport:{width:1440,height:1000}});
+    const errors=[];
+    await context.route('**/*',route=>route.request().url().startsWith(url)?route.continue():route.abort());
+    const page=await context.newPage();
+    page.on('pageerror',error=>errors.push(error.message));
+    page.on('response',response=>{if(response.status()>=400)errors.push(`${response.status()} ${response.url()}`);});
+    await page.goto(url);
+    await page.screenshot({path:path.join(qa,'loading-screen.png')});
+    await page.waitForFunction(()=>getComputedStyle(document.querySelector('.loader')).visibility==='hidden');
+    checks.push('Loading screen exits');
+    assert.equal(await page.locator('.project-card').count(),6);
+    assert.equal(await page.locator('link[rel="icon"]').getAttribute('href'),'assets/favicon.svg');
+    assert.deepEqual(await page.locator('.nav-left a').allTextContents(),['About','Selected work','Approach']);
+    assert.equal(await page.locator('.docksy-visual').getAttribute('href'),'https://github.com/naufalamr17/docksy');
+    assert.equal(await page.locator('.docksy-visual').getAttribute('target'),'_blank');
+    assert.equal(await page.locator('.mlp-visual').getAttribute('href'),'https://mlpmining.com/');
+    assert.equal(await page.locator('.par-visual').getAttribute('href'),'https://www.pararthala.com/');
+    const duplicateIds=await page.evaluate(()=>{const ids=[...document.querySelectorAll('[id]')].map(e=>e.id);return ids.filter((id,i)=>ids.indexOf(id)!==i);});
+    assert.deepEqual(duplicateIds,[]);
+    assert.deepEqual(await page.evaluate(()=>[...document.querySelectorAll('a[href^="#"]')].map(a=>a.getAttribute('href')).filter(h=>!document.getElementById(h.slice(1)))),[]);
+    await page.locator('#motion-toggle').click();
+    assert.equal(await page.locator('#motion-toggle').getAttribute('aria-pressed'),'true');
+    await page.screenshot({path:path.join(qa,'portfolio-desktop.png')});
+    await page.evaluate(()=>scrollTo({top:360,behavior:'instant'}));
+    await page.waitForTimeout(100);
+    assert.equal(await page.locator('.site-header').evaluate(el=>el.classList.contains('is-hidden')),true);
+    await page.evaluate(()=>scrollTo({top:180,behavior:'instant'}));
+    await page.waitForTimeout(100);
+    assert.equal(await page.locator('.site-header').evaluate(el=>el.classList.contains('is-hidden')),false);
+    assert.equal(await page.locator('.site-header').evaluate(el=>el.classList.contains('is-scrolled')),true);
+    await page.evaluate(()=>scrollTo({top:0,behavior:'instant'}));
+    await page.waitForTimeout(100);
+    assert.equal(await page.locator('.site-header').evaluate(el=>el.classList.contains('is-scrolled')),false);
+    checks.push('Navbar hides on downward scroll and returns in lime on upward scroll');
+    await page.locator('[data-filter="websites"]').click();
+    assert.equal(await page.locator('.project-card:visible').count(),2);
+    assert.equal(await page.locator('.project-card.tab-enter').count(),2);
+    await page.locator('[data-filter="applications"]').click();
+    assert.equal(await page.locator('.project-card:visible').count(),4);
+    assert.equal(await page.locator('.project-card.tab-enter').count(),4);
+    await page.locator('[data-filter="all"]').click();
+    assert.equal(await page.locator('.project-card:visible').count(),6);
+    assert.equal(await page.locator('.project-card.tab-enter').count(),6);
+    checks.push('Project filters animate: all 6 / applications 4 / websites 2');
+    assert.equal(await page.locator('[data-preview]').count(),3);
+    for(const link of await page.locator('[data-preview]').all()) {
+      await link.click();
+      assert.equal(await page.locator('dialog').evaluate(el=>el.open),true);
+      assert.equal(await page.locator('#preview-caption').textContent(),await link.getAttribute('data-caption'));
+      assert.equal(await page.locator('#preview-image').evaluate(img=>img.complete && img.naturalWidth>0),true);
+      await page.keyboard.press('Escape');
+      assert.equal(await page.locator('dialog').evaluate(el=>el.open),false);
+      assert.equal(await link.evaluate(el=>el===document.activeElement),true);
+    }
+    checks.push('Three app image previews open; Docksy and public websites link out; Escape closes and restores focus');
+    for(const el of await page.locator('.reveal').all()) {await el.scrollIntoViewIfNeeded();await page.waitForTimeout(60);}
+    await page.waitForTimeout(950);
+    assert.deepEqual(await page.evaluate(()=>[...document.querySelectorAll('img[src]')].filter(img=>!img.complete||img.naturalWidth===0).map(img=>img.src)),[]);
+    await page.evaluate(()=>{document.activeElement.blur();scrollTo({top:0,behavior:'instant'});});
+    await page.waitForTimeout(100);
+    await page.screenshot({path:path.join(qa,'portfolio-full.png'),fullPage:true});
+    for(const width of [320,390,768,1024,1440]) {
+      await page.setViewportSize({width,height:900});
+      await page.evaluate(()=>scrollTo({top:0,behavior:'instant'}));
+      await page.waitForTimeout(100);
+      assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`Horizontal overflow at ${width}px`);
+      checks.push(`No overflow at ${width}px`);
+      if(width===390) {
+        await page.screenshot({path:path.join(qa,'portfolio-mobile.png')});
+        await page.locator('.menu-toggle').click();
+        assert.equal(await page.locator('.menu-toggle').getAttribute('aria-expanded'),'true');
+        await page.locator('#navigation a[href="#projects"]').click();
+        assert.equal(await page.locator('.menu-toggle').getAttribute('aria-expanded'),'false');
+        await page.waitForTimeout(900);
+        await page.screenshot({path:path.join(qa,'portfolio-mobile-work.png')});
+        checks.push('Mobile navigation opens and closes on selection');
+      }
+    }
+    await page.emulateMedia({reducedMotion:'reduce'});
+    await page.reload();
+    assert.equal(await page.locator('.loader').evaluate(el=>getComputedStyle(el).display),'none');
+    assert.equal(await page.locator('#motion-toggle').isVisible(),false);
+    assert.equal(await page.locator('.reveal.pending').count(),0);
+    checks.push('Reduced motion disables loader, reveals and animated canvas');
+    assert.deepEqual(errors,[]);
+    checks.push('No browser errors, missing assets, or external runtime requests');
+    const offline=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});
+    const plain=await offline.newPage();await plain.goto(url);await plain.waitForTimeout(1600);
+    assert.equal(await plain.locator('.project-card:visible').count(),6);
+    assert.equal(await plain.locator('.filters').isVisible(),false);
+    assert.equal(await plain.locator('#navigation a[href="#projects"]').isVisible(),true);
+    await plain.locator('[data-preview]').first().click();
+    assert(plain.url().endsWith('/health-portfolio.png'));
+    checks.push('No-JavaScript content and image links work');
+    const sheet=await context.newPage({viewport:{width:1440,height:1100}});
+    await sheet.setContent(`<body style="margin:0;background:#eee;display:grid;grid-template-columns:1fr 1fr;gap:15px;padding:15px">${['docksy.png','health-portfolio.png','safety-portfolio.png','permits-portfolio.png','mlp.jpg','par.jpg'].map(id=>`<img style="width:100%" src="${url}/assets/previews/${id}">`).join('')}</body>`);
+    await sheet.locator('img').evaluateAll(imgs=>Promise.all(imgs.map(img=>img.decode())));
+    await sheet.screenshot({path:path.join(qa,'dummy-preview-contact-sheet.jpg'),fullPage:true,type:'jpeg',quality:90});
+    fs.writeFileSync(path.join(qa,'verification.json'),JSON.stringify({checks,errors},null,2));
+    console.log(JSON.stringify({checks,errors},null,2));
+  } finally { if(browser)await browser.close();await new Promise(resolve=>server.close(resolve)); }
+})().catch(error=>{console.error(error);process.exitCode=1;});
