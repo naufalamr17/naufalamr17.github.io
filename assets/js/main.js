@@ -96,6 +96,97 @@
     if (event.target === dialog && (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom)) dialog.close();
   });
 
+  const snakeDialog = document.getElementById('snake-dialog');
+  const snakeTrigger = document.getElementById('snake-trigger');
+  const snakeBoard = document.getElementById('snake-board');
+  const snakeContext = snakeBoard.getContext('2d');
+  if (snakeContext && typeof snakeDialog.showModal === 'function') {
+    const cells = 15;
+    const cellSize = snakeBoard.width / cells;
+    const status = document.getElementById('snake-status');
+    let snake = [];
+    let apple = { x: 0, y: 0 };
+    let direction = { x: 1, y: 0 };
+    let nextDirection = direction;
+    let score = 0;
+    let snakeTimer = 0;
+    let ready = false;
+
+    const placeApple = () => {
+      do apple = { x: Math.floor(Math.random() * cells), y: Math.floor(Math.random() * cells) };
+      while (snake.some(part => part.x === apple.x && part.y === apple.y));
+    };
+    const drawSnake = () => {
+      snakeContext.fillStyle = '#252620';
+      snakeContext.fillRect(0, 0, snakeBoard.width, snakeBoard.height);
+      snakeContext.fillStyle = '#ddf247';
+      snake.forEach(part => snakeContext.fillRect(part.x * cellSize + 2, part.y * cellSize + 2, cellSize - 4, cellSize - 4));
+      snakeContext.fillStyle = '#ef6461';
+      snakeContext.fillRect(apple.x * cellSize + 5, apple.y * cellSize + 5, cellSize - 10, cellSize - 10);
+    };
+    const updateStatus = message => { status.textContent = message || `Score: ${score} · Use arrow keys or the controls.`; };
+    const stopSnake = message => {
+      clearInterval(snakeTimer);
+      snakeTimer = 0;
+      ready = false;
+      updateStatus(message);
+    };
+    const moveSnake = () => {
+      direction = nextDirection;
+      const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
+      const hitWall = head.x < 0 || head.x >= cells || head.y < 0 || head.y >= cells;
+      const hitSnake = snake.some(part => part.x === head.x && part.y === head.y);
+      if (hitWall || hitSnake) return stopSnake(`Game over · Score: ${score}. Press Restart to play again.`);
+      snake.unshift(head);
+      if (head.x === apple.x && head.y === apple.y) {
+        score += 1;
+        placeApple();
+      } else snake.pop();
+      drawSnake();
+      updateStatus();
+    };
+    const startSnake = () => {
+      clearInterval(snakeTimer);
+      snake = [{ x: 8, y: 7 }, { x: 7, y: 7 }, { x: 6, y: 7 }];
+      direction = { x: 1, y: 0 };
+      nextDirection = direction;
+      score = 0;
+      placeApple();
+      drawSnake();
+      snakeTimer = 0;
+      ready = true;
+      updateStatus('Ready · Choose a direction to start.');
+    };
+    const setDirection = name => {
+      const candidate = { up:{ x:0, y:-1 }, down:{ x:0, y:1 }, left:{ x:-1, y:0 }, right:{ x:1, y:0 } }[name];
+      if (!candidate || (candidate.x === -direction.x && candidate.y === -direction.y)) return;
+      nextDirection = candidate;
+      if (ready) {
+        ready = false;
+        updateStatus();
+        snakeTimer = window.setInterval(moveSnake, 240);
+      }
+    };
+    snakeTrigger.addEventListener('click', () => {
+      snakeDialog.showModal();
+      startSnake();
+    });
+    document.getElementById('snake-restart').addEventListener('click', startSnake);
+    document.getElementById('snake-close').addEventListener('click', () => snakeDialog.close());
+    document.querySelectorAll('[data-direction]').forEach(button => button.addEventListener('click', () => setDirection(button.dataset.direction)));
+    document.addEventListener('keydown', event => {
+      if (!snakeDialog.open) return;
+      const keys = { ArrowUp:'up', ArrowDown:'down', ArrowLeft:'left', ArrowRight:'right' };
+      if (!keys[event.key]) return;
+      event.preventDefault();
+      setDirection(keys[event.key]);
+    });
+    snakeDialog.addEventListener('close', () => {
+      stopSnake();
+      snakeTrigger.focus();
+    });
+  }
+
   const canvas = document.getElementById('particle-field');
   const ctx = canvas.getContext('2d');
   if (!ctx) return;

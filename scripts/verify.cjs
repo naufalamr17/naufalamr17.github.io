@@ -44,6 +44,38 @@ const server = http.createServer((req,res) => {
     assert.deepEqual(await page.evaluate(()=>[...document.querySelectorAll('a[href^="#"]')].map(a=>a.getAttribute('href')).filter(h=>!document.getElementById(h.slice(1)))),[]);
     await page.locator('#motion-toggle').click();
     assert.equal(await page.locator('#motion-toggle').getAttribute('aria-pressed'),'true');
+    for(const selector of ['body','#intro','#about','#projects','#approach','#contact','.site-footer','.nav-contact','#snake-trigger','#particle-field']) {
+      assert.match(await page.locator(selector).evaluate(el=>getComputedStyle(el).cursor),/pixel-arrow\.svg/,`Pixel cursor missing on ${selector}`);
+    }
+    await page.clock.install({time:new Date('2026-01-01T00:00:00Z')});
+    await page.clock.pauseAt(new Date('2026-01-01T00:00:01Z'));
+    await page.locator('#snake-trigger').click();
+    assert.equal(await page.locator('#snake-dialog').evaluate(el=>el.open),true);
+    assert.equal(await page.locator('.snake-controls').isVisible(),false);
+    assert.equal(await page.locator('#snake-close .close-label').isVisible(),true);
+    const readyBoard=await page.locator('#snake-board').evaluate(el=>el.toDataURL());
+    await page.clock.runFor(2000);
+    assert.equal(await page.locator('#snake-board').evaluate(el=>el.toDataURL()),readyBoard,'Snake must wait for input');
+    await page.keyboard.press('ArrowRight');
+    await page.clock.runFor(239);
+    assert.equal(await page.locator('#snake-board').evaluate(el=>el.toDataURL()),readyBoard,'Snake must not move before 240 ms');
+    await page.clock.runFor(1);
+    assert.notEqual(await page.locator('#snake-board').evaluate(el=>el.toDataURL()),readyBoard,'Snake should move after 240 ms');
+    await page.locator('#snake-restart').click();
+    assert.match(await page.locator('#snake-status').textContent(),/^Ready/);
+    await page.locator('#snake-close').click();
+    assert.equal(await page.locator('#snake-dialog').evaluate(el=>el.open),false);
+    assert.equal(await page.locator('#snake-trigger').evaluate(el=>el===document.activeElement),true);
+    const fieldBefore=await page.locator('#particle-field').evaluate(el=>el.toDataURL());
+    await page.locator('#motion-toggle').click();
+    await page.clock.runFor(96);
+    assert.notEqual(await page.locator('#particle-field').evaluate(el=>el.toDataURL()),fieldBefore,'Hero animation should resume');
+    await page.locator('#motion-toggle').click();
+    const pausedField=await page.locator('#particle-field').evaluate(el=>el.toDataURL());
+    await page.clock.runFor(96);
+    assert.equal(await page.locator('#particle-field').evaluate(el=>el.toDataURL()),pausedField,'Hero animation should pause');
+    await page.clock.resume();
+    checks.push('Original hero animation plays and pauses; pixel cursor throughout; Snake moves every 240 ms');
     await page.screenshot({path:path.join(qa,'portfolio-desktop.png')});
     await page.evaluate(()=>scrollTo({top:360,behavior:'instant'}));
     await page.waitForTimeout(100);
@@ -69,11 +101,11 @@ const server = http.createServer((req,res) => {
     assert.equal(await page.locator('[data-preview]').count(),3);
     for(const link of await page.locator('[data-preview]').all()) {
       await link.click();
-      assert.equal(await page.locator('dialog').evaluate(el=>el.open),true);
+      assert.equal(await page.locator('#preview-dialog').evaluate(el=>el.open),true);
       assert.equal(await page.locator('#preview-caption').textContent(),await link.getAttribute('data-caption'));
       assert.equal(await page.locator('#preview-image').evaluate(img=>img.complete && img.naturalWidth>0),true);
       await page.keyboard.press('Escape');
-      assert.equal(await page.locator('dialog').evaluate(el=>el.open),false);
+      assert.equal(await page.locator('#preview-dialog').evaluate(el=>el.open),false);
       assert.equal(await link.evaluate(el=>el===document.activeElement),true);
     }
     checks.push('Three app image previews open; Docksy and public websites link out; Escape closes and restores focus');
@@ -97,6 +129,20 @@ const server = http.createServer((req,res) => {
         assert.equal(await page.locator('.menu-toggle').getAttribute('aria-expanded'),'false');
         await page.waitForTimeout(900);
         await page.screenshot({path:path.join(qa,'portfolio-mobile-work.png')});
+        await page.evaluate(()=>scrollTo({top:0,behavior:'instant'}));
+        await page.waitForTimeout(100);
+        await page.locator('#snake-trigger').click();
+        assert.equal(await page.locator('.snake-controls').isVisible(),true);
+        assert.equal(await page.locator('#snake-close').innerText(),'×');
+        assert.equal(await page.locator('#snake-close').getAttribute('aria-label'),'Close Snake game');
+        assert(await page.locator('#snake-dialog').evaluate(el=>el.scrollWidth<=el.clientWidth),'Snake dialog must not overflow');
+        await page.screenshot({path:path.join(qa,'snake-mobile.png')});
+        await page.locator('[data-direction="right"]').click();
+        assert.match(await page.locator('#snake-status').textContent(),/^Score:/);
+        await page.locator('#snake-close').click();
+        await page.locator('[data-preview]').first().click();
+        assert.equal(await page.locator('.dialog-close').innerText(),'×');
+        await page.locator('.dialog-close').click();
         checks.push('Mobile navigation opens and closes on selection');
       }
     }
