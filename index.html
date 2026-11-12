@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#f8f8f3" />
+  <meta name="theme-color" content="#fff9ef" />
   <meta name="description" content="Naufal Ammar Hidayatulloh — web developer building considered digital experiences, enterprise applications, and document intelligence tools." />
-  <meta property="og:title" content="Naufal Ammar — Thoughtful code. Real-world impact." />
+  <meta property="og:title" content="Naufal Ammar — Big ideas. Built bit by bit." />
   <meta property="og:description" content="Selected work in enterprise software, document intelligence, and the web." />
   <meta property="og:type" content="website" />
   <title>Naufal Ammar — Web Developer</title>
@@ -20,6 +20,7 @@
     <div class="loader-track"></div><span>Ideas taking shape.</span>
   </div>
   <header class="site-header">
+    <span class="reading-progress" aria-hidden="true"></span>
     <a class="brand" href="#intro" aria-label="Naufal Ammar, home"><img src="assets/wordmark.svg" alt="Naufal Ammar" width="120" height="50" /></a>
     <button class="menu-toggle" aria-expanded="false" aria-controls="navigation">Menu <span aria-hidden="true">＋</span></button>
     <nav id="navigation" class="navigation" aria-label="Main navigation">
@@ -30,25 +31,101 @@
   <main id="main">
     <section class="hero" id="intro" aria-labelledby="hero-title">
       <canvas id="particle-field" aria-hidden="true"></canvas>
+      <div class="hero-orbit" aria-hidden="true"><span></span></div>
+      <div class="cursor-drone" aria-hidden="true"><svg viewBox="0 0 32 24" shape-rendering="crispEdges"><path fill="#7060aa" d="M0 7h8v10h-8zM24 7h8v10h-8z"/><path fill="#c3b6f2" d="M1 8h6v3h-6zM25 8h6v3h-6zM1 13h6v3h-6zM25 13h6v3h-6z"/><path fill="#252126" d="M8 10h4v4h-4zM20 10h4v4h-4zM12 5h8v14h-8zM15 0h2v5h-2z"/><path fill="#ff963d" d="M13 6h6v12h-6z"/><path fill="#fff9ef" d="M14 9h4v3h-4z"/><path class="drone-signal" fill="#ff6238" d="M13 21h6v2h-6z"/></svg></div>
       <div class="hero-copy">
-        <p class="eyebrow"><span class="square"></span>Naufal Ammar Hidayatulloh · Web developer</p>
-        <h1 id="hero-title">Thoughtful code.<br />Real-world<br /><em>impact.</em><button id="snake-trigger" class="title-pixel" type="button" aria-haspopup="dialog" aria-controls="snake-dialog" aria-label="Play the hidden Snake game"></button></h1>
-        <div class="hero-bottom"><p>I turn complex workflows into clear,<br class="desktop-break" /> useful digital experiences.</p><a class="round-link" href="#projects"><span>Explore my work</span><span class="circle" aria-hidden="true">↘</span></a></div>
+        <p class="eyebrow"><span class="square"></span>Independent mind. Thoughtful developer.</p>
+        <h1 id="hero-title" aria-label="Big ideas. Built bit by bit."><span class="title-line" aria-hidden="true">Big ideas.</span><span class="title-line" aria-hidden="true">Built <em>bit by bit.</em><span class="pixel-spark">✳</span></span></h1>
+        <div class="hero-bottom"><p>I’m Naufal. I turn complex workflows into<br class="desktop-break" /> useful digital experiences. With a human touch.</p><div class="hero-links"><a class="round-link" href="#projects"><span>Explore my work</span><span class="circle" aria-hidden="true">↗</span></a><a class="hero-contact" href="#contact">Let’s build something <span aria-hidden="true">↗</span></a></div></div>
       </div>
-      <div class="hero-footer"><span>Based in Indonesia. Building for people.</span><span>Scroll to discover <span aria-hidden="true">↓</span></span></div>
+      <div class="pixel-landscape" aria-hidden="true"><div class="pixel-stacks stacks-left"><i></i><i></i><i></i><i></i></div><div class="pixel-stacks stacks-right"><i></i><i></i><i></i><i></i><i></i></div><span class="landscape-star">✦</span></div>
+      <div class="character-companion"><span class="character-label">Meet Miko.<span>Click to take a play break.</span></span><div class="character-route"><button id="snake-trigger" class="title-pixel" type="button" aria-haspopup="dialog" aria-controls="snake-dialog" aria-label="Play Snake with Miko the pixel fox"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 56" shape-rendering="crispEdges" class="character-art" aria-hidden="true">
+  <g class="character-tail">
+    <path fill="#342b32" d="M32 44h6v-4h2v-6h-2v-6h4v4h2v4h2v8h-2v4h-4v2h-8z"/>
+    <path fill="#ed793b" d="M34 44h6v-4h2v-4h2v8h-2v2h-4v2h-4z"/>
+    <path fill="#fff0d1" d="M40 30h2v6h2v4h-4v-6z"/>
+    <path fill="#ffba69" d="M36 46h4v2h-4z"/>
+  </g>
+  <g class="character-feet">
+    <path fill="#342b32" d="M14 44h8v8h-2v2h-10v-4h4zM26 44h8v6h4v4h-10v-2h-2z"/>
+    <path fill="#ed793b" d="M16 46h4v6h-8v-2h4zM28 46h4v4h4v2h-8z"/>
+    <path fill="#fff0d1" d="M12 50h4v2h-4zM32 50h4v2h-4z"/>
+  </g>
+  <g class="character-body">
+    <path fill="#342b32" d="M16 28h16v4h2v4h2v12h-4v2H16v-2h-4V36h2v-4h2z"/>
+    <path fill="#f89749" d="M16 32h16v4h2v10h-4v2H18v-2h-4V36h2z"/>
+    <path fill="#ed793b" d="M14 40h4v6h12v-2h4v2h-4v2H18v-2h-4z"/>
+    <path fill="#fff0d1" d="M20 34h8v2h2v8h-2v2h-8v-2h-2v-8h2z"/>
+    <path fill="#d8b58e" d="M20 44h8v2h-8z"/>
+    <path fill="#7060aa" d="M24 36h2v2h2v2h-2v2h-2v-2h-2v-2h2z"/>
+  </g>
+  <g class="character-paw-left">
+    <path fill="#342b32" d="M12 34h4v10h-2v2H8v-8h2v-2h2z"/>
+    <path fill="#f89749" d="M12 36h2v8h-4v-6h2z"/>
+    <path fill="#fff0d1" d="M10 42h4v2h-4z"/>
+  </g>
+  <g class="character-paw-rest">
+    <path fill="#342b32" d="M32 34h4v2h2v2h2v8h-6v-2h-2z"/>
+    <path fill="#f89749" d="M34 36h2v2h2v6h-4z"/>
+    <path fill="#fff0d1" d="M34 42h4v2h-4z"/>
+  </g>
+  <g class="character-paw-wave">
+    <path fill="#342b32" d="M32 36h4v-4h2v-4h6v2h2v8h-4v4h-6v-2h-4z"/>
+    <path fill="#f89749" d="M34 36h4v-4h2v-2h2v2h2v4h-4v4h-4v-2h-2z"/>
+    <path fill="#fff0d1" d="M40 30h2v2h2v4h-4z"/>
+    <path fill="#ed793b" d="M40 34h2v2h-2z"/>
+  </g>
+  <g class="character-head">
+    <g class="character-ear character-ear-left">
+      <path fill="#342b32" d="M8 2h4v2h4v4h4v10H8z"/>
+      <path fill="#f89749" d="M10 6h2v2h4v6h-6z"/>
+      <path fill="#d97869" d="M12 10h2v4h-2z"/>
+    </g>
+    <g class="character-ear character-ear-right">
+      <path fill="#342b32" d="M36 2h4v16H28V8h4V4h4z"/>
+      <path fill="#f89749" d="M36 6h2v8h-6V8h4z"/>
+      <path fill="#d97869" d="M34 10h2v4h-2z"/>
+    </g>
+    <path fill="#342b32" d="M16 10h16v2h4v2h2v4h2v8h-2v4h-4v2H14v-2h-4v-4H8v-8h2v-4h2v-2h4z"/>
+    <path fill="#f89749" d="M16 12h16v2h4v4h2v8h-2v2h-4v2H16v-2h-4v-2h-2v-8h2v-4h4z"/>
+    <path fill="#ffba69" d="M16 12h16v2H16zM12 16h4v2h-4zM32 16h4v2h-4z"/>
+    <path fill="#fff0d1" d="M12 20h8v2h8v-2h8v6h-2v2h-4v2H18v-2h-4v-2h-2z"/>
+    <g class="character-eyes">
+      <path fill="#342b32" d="M16 18h4v6h-4zM28 18h4v6h-4z"/>
+      <path fill="#fff9ef" d="M16 18h2v2h-2zM28 18h2v2h-2z"/>
+    </g>
+    <path fill="#e6a47d" d="M12 24h4v2h-4zM32 24h4v2h-4z"/>
+    <path fill="#342b32" d="M22 24h4v2h-4zM24 26h2v2h-2z"/>
+    <path fill="#d8b58e" d="M18 28h12v2H18z"/>
+    <g class="character-cyber-kit">
+      <path fill="#64ffda" fill-opacity=".28" d="M26 18h8v6h-8z"/>
+      <path fill="#64ffda" d="M26 16h8v2h-8zM34 18h2v6h-2zM26 24h8v2h-8z"/>
+      <path fill="#ff5fa9" d="M36 18h2v2h-2z"/>
+    </g>
+  </g>
+  <g class="character-scarf">
+    <path fill="#342b32" d="M14 30h20v6H14zM30 34h6v8h-6z"/>
+    <path fill="#a695d4" d="M16 32h16v2H16zM32 34h2v6h-2z"/>
+    <path fill="#7060aa" d="M28 32h4v2h-4zM32 38h2v2h-2z"/>
+  </g>
+</svg>
+</button><span class="character-shadow" aria-hidden="true"></span></div></div>
+      <div class="hero-footer"><span><span class="status-dot"></span>Based in Indonesia. Building for people.</span><a href="#about">A little more about me <span aria-hidden="true">↓</span></a></div>
       <button id="motion-toggle" class="motion-toggle" type="button" aria-pressed="false" hidden>Pause motion</button>
     </section>
+    <div class="focus-strip" aria-label="Development focus"><span class="focus-caption">From the first idea<br />to the final detail.</span><div class="focus-window"><div class="focus-track"><div class="focus-group"><span><b aria-hidden="true">✳</b> Enterprise applications</span><span><b aria-hidden="true">↳</b> Document intelligence</span><span><b aria-hidden="true">✳</b> Web experiences</span><span><b aria-hidden="true">↳</b> Thoughtful interfaces</span></div><div class="focus-group" aria-hidden="true"><span><b>✳</b> Enterprise applications</span><span><b>↳</b> Document intelligence</span><span><b>✳</b> Web experiences</span><span><b>↳</b> Thoughtful interfaces</span></div></div></div></div>
     <section class="intro-strip section-pad" id="about" aria-labelledby="about-title">
       <p class="eyebrow reveal">01 / A little about me</p>
       <div class="intro-content reveal"><h2 id="about-title">Good software should make<br />the complicated <em>feel simple.</em></h2><div class="intro-detail"><p>I’m Naufal, a web developer focused on the places where technology meets everyday work. I build applications that help teams manage operations, find information, and get things done.</p><p>From the first workflow to the final interface, I care about clarity, reliability, and the details that make a product useful.</p></div></div>
+      <div class="workflow-scene reveal" aria-hidden="true"><svg class="workflow-wires" viewBox="0 0 1000 200" preserveAspectRatio="none"><g fill="none" stroke="currentColor"><path d="M0 40H220L440 100M0 160H220L440 100M1000 40H780L560 100M1000 160H780L560 100"/><path class="flow-packets" d="M0 40H220L440 100M0 160H220L440 100M560 100L780 40H1000M560 100L780 160H1000"/></g></svg><span class="flow-token token-one">People</span><span class="flow-token token-two">Complex workflows</span><div class="flow-center"><span class="flow-square"></span><span>Thoughtful<br />code.</span></div><span class="flow-token token-three">Clear interfaces</span><span class="flow-token token-four">Useful software</span></div>
       <ul class="expertise" aria-label="Areas of focus"><li>Enterprise applications</li><li>Document intelligence</li><li>Web experiences</li></ul>
     </section>
     <section class="work section-pad" id="projects" aria-labelledby="work-title">
-      <div class="section-heading reveal"><div><p class="eyebrow">02 / Selected work</p><h2 id="work-title">Built with purpose.</h2></div><p>A selection of systems and websites,<br />each solving a different kind of problem.</p></div>
+      <div class="section-heading reveal"><div><p class="eyebrow">02 / Selected work</p><h2 id="work-title">Less friction.<br /><em>More possibility.</em></h2></div><p>A selection of systems and websites,<br />each solving a different kind of problem.</p></div>
       <div class="work-toolbar"><div class="filters" role="group" aria-label="Filter projects" hidden><button class="active" data-filter="all" aria-pressed="true">All work</button><button data-filter="applications" aria-pressed="false">Applications</button><button data-filter="websites" aria-pressed="false">Websites</button></div><p class="preview-note"><span class="square"></span>Private apps, fictional data. Public sites, real previews.</p></div>
       <p id="filter-status" class="sr-only" aria-live="polite"></p>
       <div class="project-grid">
-        <article class="project-card featured reveal" data-category="applications">
+        <article class="project-card reveal" data-category="applications">
           <a class="project-visual docksy-visual" href="https://github.com/naufalamr17/docksy" target="_blank" rel="noopener noreferrer" aria-label="Open Docksy repository on GitHub">
             <span class="image-label">Document intelligence · Sample data</span>
             <img src="assets/previews/docksy.png" width="1440" height="900" alt="Reconstructed Docksy chat with a fictional team handbook and sample cited answer" loading="lazy" decoding="async" />
@@ -75,7 +152,7 @@
           <div class="project-info"><div><p class="project-type">03 / Safety & compliance</p><h3>SIPAWAS</h3><p>Inspections, corrective actions, training, and weekly reporting in one workspace for safety teams.</p><ul class="tags"><li>Laravel</li><li>Tailwind CSS</li><li>Reporting</li></ul></div></div>
         </article>
 
-        <article class="project-card featured reveal" data-category="applications">
+        <article class="project-card reveal" data-category="applications">
           <a class="project-visual permits-visual" href="assets/previews/permits-portfolio.png" data-preview data-title="SIPENA" data-caption="Sanitized portfolio preview · Fictional data" aria-label="Enlarge SIPENA portfolio preview">
             <span class="image-label">Clarity in compliance · Sample data</span>
             <img src="assets/previews/permits-portfolio.png" width="1440" height="900" alt="Sanitized SIPENA dashboard portfolio preview showing fictional sample data" loading="lazy" decoding="async" />
@@ -108,7 +185,7 @@
       <div class="section-heading reveal"><div><p class="eyebrow">03 / How I work</p><h2 id="approach-title">Understand first.<br /><em>Build with intention.</em></h2></div><p>The best solution starts with<br />the right understanding.</p></div>
       <div class="approach-grid"><article class="reveal"><span>01</span><h3>Understand the work.</h3><p>Learn the people, the process, and the friction. Turn real needs into a clear scope.</p></article><article class="reveal"><span>02</span><h3>Make it feel simple.</h3><p>Shape the workflow and interface together. Give each action a clear place and purpose.</p></article><article class="reveal"><span>03</span><h3>Build. Test. Refine.</h3><p>Connect the system, check the details, and keep improving how it works in practice.</p></article></div>
     </section>
-    <section class="contact section-pad" id="contact" aria-labelledby="contact-title"><p class="eyebrow reveal">04 / Start a conversation</p><div class="contact-main reveal"><h2 id="contact-title">Have something<br />in <em>mind?</em></h2><a class="contact-arrow" href="mailto:amr.naufal17@gmail.com" aria-label="Email Naufal Ammar">↗</a></div><div class="contact-bottom"><p>Let’s turn it into something useful.</p><a href="mailto:amr.naufal17@gmail.com">amr.naufal17@gmail.com <span aria-hidden="true">↗</span></a></div></section>
+    <section class="contact section-pad" id="contact" aria-labelledby="contact-title"><p class="eyebrow reveal">04 / Start a conversation</p><div class="contact-main reveal"><h2 id="contact-title">Your next big idea.<br /><em>Let’s build it.</em></h2><a class="contact-arrow" href="mailto:amr.naufal17@gmail.com" aria-label="Email Naufal Ammar">↗</a></div><div class="contact-bottom"><p>Good things start with a hello.</p><a href="mailto:amr.naufal17@gmail.com">amr.naufal17@gmail.com <span aria-hidden="true">↗</span></a></div><div class="contact-pixels" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div></section>
   </main>
   <footer class="site-footer"><a href="#intro" aria-label="Back to top"><img src="assets/wordmark.svg" alt="Naufal Ammar" width="100" height="42" /></a><p>© <span id="year">2026</span> Naufal Ammar Hidayatulloh</p><div><a href="https://github.com/naufalamr17" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/naufalamr17/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="#intro">Back to top ↑</a></div></footer>
   <dialog id="preview-dialog" aria-labelledby="preview-title"><div class="dialog-top"><div><h2 id="preview-title">Project preview</h2><p id="preview-caption">Reconstructed interface · Fictional data</p></div><button class="dialog-close" aria-label="Close preview"><span class="close-label">Close </span><span aria-hidden="true">×</span></button></div><img id="preview-image" alt="" width="1440" height="900" /></dialog>

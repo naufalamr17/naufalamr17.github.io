@@ -31,7 +31,25 @@ const server = http.createServer((req,res) => {
     await page.goto(url);
     await page.screenshot({path:path.join(qa,'loading-screen.png')});
     await page.waitForFunction(()=>getComputedStyle(document.querySelector('.loader')).visibility==='hidden');
+    await page.waitForFunction(()=>[...document.querySelectorAll('.title-char')].every(el=>el.getAnimations().every(animation=>animation.playState==='finished')));
     checks.push('Loading screen exits');
+    assert.equal(await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(255, 249, 239)');
+    assert.equal(await page.locator('.character-cyber-kit').evaluate(el=>getComputedStyle(el).display),'block');
+    checks.push('Original cream theme and cyberpunk Miko visor render');
+    assert(await page.locator('.title-char').count()>20,'The hero title should reveal in individual characters');
+    await page.mouse.move(1000,130);
+    await page.waitForTimeout(400);
+    const droneBefore=await page.locator('.cursor-drone').evaluate(el=>getComputedStyle(el).transform);
+    await page.mouse.move(350,130);
+    await page.waitForTimeout(400);
+    assert.notEqual(await page.locator('.cursor-drone').evaluate(el=>getComputedStyle(el).transform),droneBefore,'Satellite should follow the pointer');
+    const trackBefore=await page.locator('.focus-track').evaluate(el=>getComputedStyle(el).transform);
+    await page.waitForTimeout(160);
+    assert.notEqual(await page.locator('.focus-track').evaluate(el=>getComputedStyle(el).transform),trackBefore,'Focus strip should scroll automatically');
+    assert.equal(await page.locator('.character-art .character-ear').count(),2);
+    assert.equal(await page.locator('.character-art .character-tail').count(),1);
+    assert.equal(await page.locator('.character-art .character-hair').count(),0,'Avatar should be replaced with the original fox mascot');
+    checks.push('Original Miko fox mascot; individual title reveal, pointer-following satellite, and moving focus strip work');
     assert.equal(await page.locator('.project-card').count(),6);
     assert.equal(await page.locator('link[rel="icon"]').getAttribute('href'),'assets/favicon.svg');
     assert.deepEqual(await page.locator('.nav-left a').allTextContents(),['About','Selected work','Approach']);
@@ -44,11 +62,17 @@ const server = http.createServer((req,res) => {
     assert.deepEqual(await page.evaluate(()=>[...document.querySelectorAll('a[href^="#"]')].map(a=>a.getAttribute('href')).filter(h=>!document.getElementById(h.slice(1)))),[]);
     await page.locator('#motion-toggle').click();
     assert.equal(await page.locator('#motion-toggle').getAttribute('aria-pressed'),'true');
+    for(const selector of ['.character-art','.character-eyes','.character-tail','.character-ear','.character-paw-wave','.character-shadow','.character-route','.focus-track','.flow-packets','.flow-square']) {
+      assert(await page.locator(selector).evaluateAll(elements=>elements.every(el=>getComputedStyle(el).animationPlayState==='paused')),`${selector} should pause`);
+    }
+    const stoppedTrack=await page.locator('.focus-track').evaluate(el=>getComputedStyle(el).transform);
+    await page.waitForTimeout(160);
+    assert.equal(await page.locator('.focus-track').evaluate(el=>getComputedStyle(el).transform),stoppedTrack);
     for(const selector of ['body','#intro','#about','#projects','#approach','#contact','.site-footer','.nav-contact','#snake-trigger','#particle-field']) {
       assert.match(await page.locator(selector).evaluate(el=>getComputedStyle(el).cursor),/pixel-arrow\.svg/,`Pixel cursor missing on ${selector}`);
     }
     await page.clock.install({time:new Date('2026-01-01T00:00:00Z')});
-    await page.clock.pauseAt(new Date('2026-01-01T00:00:01Z'));
+    await page.clock.pauseAt(new Date('2026-01-01T00:00:10Z'));
     await page.locator('#snake-trigger').click();
     assert.equal(await page.locator('#snake-dialog').evaluate(el=>el.open),true);
     assert.equal(await page.locator('.snake-controls').isVisible(),false);
@@ -75,7 +99,7 @@ const server = http.createServer((req,res) => {
     await page.clock.runFor(96);
     assert.equal(await page.locator('#particle-field').evaluate(el=>el.toDataURL()),pausedField,'Hero animation should pause');
     await page.clock.resume();
-    checks.push('Original hero animation plays and pauses; pixel cursor throughout; Snake moves every 240 ms');
+    checks.push('All decorative animations pause together; pixel cursor throughout; Snake moves every 240 ms');
     await page.screenshot({path:path.join(qa,'portfolio-desktop.png')});
     await page.evaluate(()=>scrollTo({top:360,behavior:'instant'}));
     await page.waitForTimeout(100);
@@ -84,10 +108,16 @@ const server = http.createServer((req,res) => {
     await page.waitForTimeout(100);
     assert.equal(await page.locator('.site-header').evaluate(el=>el.classList.contains('is-hidden')),false);
     assert.equal(await page.locator('.site-header').evaluate(el=>el.classList.contains('is-scrolled')),true);
+    await page.locator('#motion-toggle').click();
+    await page.evaluate(()=>scrollTo({top:250,behavior:'instant'}));
+    await page.waitForTimeout(100);
+    assert(await page.locator('.hero').evaluate(el=>parseFloat(el.style.getPropertyValue('--hero-drift'))>0),'Hero should move with scroll');
+    assert(await page.locator('.reading-progress').evaluate(el=>getComputedStyle(el).transform!=='matrix(0, 0, 0, 1, 0, 0)'),'Reading progress should update');
+    await page.locator('#motion-toggle').click();
     await page.evaluate(()=>scrollTo({top:0,behavior:'instant'}));
     await page.waitForTimeout(100);
     assert.equal(await page.locator('.site-header').evaluate(el=>el.classList.contains('is-scrolled')),false);
-    checks.push('Navbar hides on downward scroll and returns in lime on upward scroll');
+    checks.push('Navbar hides on downward scroll and returns on upward scroll');
     await page.locator('[data-filter="websites"]').click();
     assert.equal(await page.locator('.project-card:visible').count(),2);
     assert.equal(await page.locator('.project-card.tab-enter').count(),2);
@@ -97,6 +127,7 @@ const server = http.createServer((req,res) => {
     await page.locator('[data-filter="all"]').click();
     assert.equal(await page.locator('.project-card:visible').count(),6);
     assert.equal(await page.locator('.project-card.tab-enter').count(),6);
+    assert(await page.locator('.project-card').evaluateAll(cards=>cards.every(card=>getComputedStyle(card).opacity==='1')),'Pausing motion must not hide newly filtered projects');
     checks.push('Project filters animate: all 6 / applications 4 / websites 2');
     assert.equal(await page.locator('[data-preview]').count(),3);
     for(const link of await page.locator('[data-preview]').all()) {
@@ -115,11 +146,25 @@ const server = http.createServer((req,res) => {
     await page.evaluate(()=>{document.activeElement.blur();scrollTo({top:0,behavior:'instant'});});
     await page.waitForTimeout(100);
     await page.screenshot({path:path.join(qa,'portfolio-full.png'),fullPage:true});
-    for(const width of [320,390,768,1024,1440]) {
+    for(const width of [320,390,768,1024,1200,1440]) {
       await page.setViewportSize({width,height:900});
       await page.evaluate(()=>scrollTo({top:0,behavior:'instant'}));
       await page.waitForTimeout(100);
       assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`Horizontal overflow at ${width}px`);
+      assert(await page.locator('.character-companion').evaluate(el=>{const mascot=el.getBoundingClientRect();const copy=document.querySelector('.hero-copy').getBoundingClientRect();return mascot.left>=0&&mascot.right<=innerWidth&&(mascot.top>=copy.bottom||mascot.left>=copy.right);}),`Character overlaps hero copy at ${width}px`);
+      assert(await page.locator('.character-route').evaluate(el=>{
+        const animation=el.getAnimations()[0];
+        const originalTime=animation.currentTime;
+        const copy=document.querySelector('.hero-copy').getBoundingClientRect();
+        let clear=true;
+        for(const time of [3000,6600,7140,7680,8040,13260,13620,14160,14700,15240,21000]) {
+          animation.currentTime=time;
+          const sprite=el.getBoundingClientRect();
+          clear=clear&&sprite.left>=0&&sprite.right<=innerWidth&&(sprite.top>=copy.bottom||sprite.left>=copy.right);
+        }
+        animation.currentTime=originalTime;
+        return clear;
+      }),`Mascot jump crosses the title or leaves the viewport at ${width}px`);
       checks.push(`No overflow at ${width}px`);
       if(width===390) {
         await page.screenshot({path:path.join(qa,'portfolio-mobile.png')});
@@ -151,7 +196,14 @@ const server = http.createServer((req,res) => {
     assert.equal(await page.locator('.loader').evaluate(el=>getComputedStyle(el).display),'none');
     assert.equal(await page.locator('#motion-toggle').isVisible(),false);
     assert.equal(await page.locator('.reveal.pending').count(),0);
-    checks.push('Reduced motion disables loader, reveals and animated canvas');
+    for(const selector of ['.character-art','.character-eyes','.character-tail','.character-ear','.character-paw-wave','.character-shadow','.character-route','.focus-track','.flow-packets','.title-char']) {
+      assert.equal(await page.locator(selector).first().evaluate(el=>getComputedStyle(el).animationName),'none',`${selector} should respect reduced motion`);
+    }
+    const quietDrone=await page.locator('.cursor-drone').evaluate(el=>getComputedStyle(el).transform);
+    await page.mouse.move(600,140);
+    await page.waitForTimeout(100);
+    assert.equal(await page.locator('.cursor-drone').evaluate(el=>getComputedStyle(el).transform),quietDrone);
+    checks.push('Reduced motion disables title, mascot, satellite tracking, marquee, workflow, reveals, and canvas animation');
     assert.deepEqual(errors,[]);
     checks.push('No browser errors, missing assets, or external runtime requests');
     const offline=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});
