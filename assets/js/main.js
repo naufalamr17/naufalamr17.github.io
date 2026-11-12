@@ -115,6 +115,40 @@
     if (event.target === dialog && (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom)) dialog.close();
   });
 
+  const serviceTabs = [...document.querySelectorAll('[data-service]')];
+  const servicePanels = [...document.querySelectorAll('.service-panel')];
+  const selectService = tab => {
+    serviceTabs.forEach(button => {
+      const selected = button === tab;
+      button.setAttribute('aria-selected', String(selected));
+      button.tabIndex = selected ? 0 : -1;
+    });
+    servicePanels.forEach(panel => {
+      panel.hidden = panel.id !== tab.getAttribute('aria-controls');
+      panel.classList.remove('panel-enter');
+      if (!panel.hidden) {
+        void panel.offsetWidth;
+        panel.classList.add('panel-enter');
+      }
+    });
+  };
+  document.querySelector('.service-tabs').hidden = false;
+  selectService(serviceTabs[0]);
+  serviceTabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => selectService(tab));
+    tab.addEventListener('keydown', event => {
+      let next = index;
+      if (event.key === 'ArrowRight' || event.key === 'ArrowDown') next = (index + 1) % serviceTabs.length;
+      else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') next = (index - 1 + serviceTabs.length) % serviceTabs.length;
+      else if (event.key === 'Home') next = 0;
+      else if (event.key === 'End') next = serviceTabs.length - 1;
+      else return;
+      event.preventDefault();
+      selectService(serviceTabs[next]);
+      serviceTabs[next].focus();
+    });
+  });
+
   const snakeDialog = document.getElementById('snake-dialog');
   const snakeTrigger = document.getElementById('snake-trigger');
   const snakeBoard = document.getElementById('snake-board');
@@ -136,11 +170,11 @@
       while (snake.some(part => part.x === apple.x && part.y === apple.y));
     };
     const drawSnake = () => {
-      snakeContext.fillStyle = '#252126';
+      snakeContext.fillStyle = '#21172f';
       snakeContext.fillRect(0, 0, snakeBoard.width, snakeBoard.height);
-      snakeContext.fillStyle = '#ff963d';
+      snakeContext.fillStyle = '#f758b7';
       snake.forEach(part => snakeContext.fillRect(part.x * cellSize + 2, part.y * cellSize + 2, cellSize - 4, cellSize - 4));
-      snakeContext.fillStyle = '#ef6461';
+      snakeContext.fillStyle = '#d9f37c';
       snakeContext.fillRect(apple.x * cellSize + 5, apple.y * cellSize + 5, cellSize - 10, cellSize - 10);
     };
     const updateStatus = message => { status.textContent = message || `Score: ${score} · Use arrow keys or the controls.`; };
@@ -211,7 +245,6 @@
   if (!ctx) return;
   const motionButton = document.getElementById('motion-toggle');
   const hero = document.querySelector('.hero');
-  const drone = document.querySelector('.cursor-drone');
   let width = 0;
   let height = 0;
   let frame = 0;
@@ -227,8 +260,7 @@
     document.documentElement.style.setProperty('--reading-progress', progress);
     const moving = !paused && !reducedMotion.matches;
     const heroProgress = moving ? Math.min(1, Math.max(0, -hero.getBoundingClientRect().top / hero.offsetHeight)) : 0;
-    hero.style.setProperty('--hero-drift', `${heroProgress * 90}px`);
-    hero.style.setProperty('--landscape-drift', `${heroProgress * -45}px`);
+    hero.style.setProperty('--hero-drift', `${heroProgress * 30}px`);
     cards.forEach(card => {
       const shift = moving ? Math.max(-12, Math.min(12, (innerHeight * .55 - card.getBoundingClientRect().top) * .035)) : 0;
       card.style.setProperty('--image-shift', `${shift}px`);
@@ -237,25 +269,21 @@
   function scheduleScrollMotion() {
     if (!scrollFrame) scrollFrame = requestAnimationFrame(updateScrollMotion);
   }
-  hero.addEventListener('pointermove', event => {
-    if (paused || reducedMotion.matches || event.pointerType !== 'mouse') return;
-    const x = Math.max(20, Math.min(hero.clientWidth - 52, event.clientX - hero.getBoundingClientRect().left - 20));
-    drone.style.setProperty('--drone-x', `${x}px`);
-  });
 
   function draw() {
     ctx.clearRect(0, 0, width, height);
     const narrow = width < 760;
-    const count = narrow ? 8 : 18;
+    const count = narrow ? 250 : 1000;
     for (let i = 0; i < count; i++) {
-      const side = i % 2;
-      const edge = narrow ? .05 : .16;
-      const x = width * (side ? 1 - edge + (i % 3) * .012 : edge - (i % 3) * .012);
-      const y = height * (.12 + (i / count) * .49) + Math.sin(time * .45 + i) * 10;
-      ctx.fillStyle = i % 3 === 0 ? '#ff623855' : '#7060aa33';
-      const size = i % 3 === 0 ? 5 : 3;
+      const x = (i * 137.508) % width;
+      const y = (i * 91.37) % height + Math.sin(time * .2 + i) * 3;
+      const distance = Math.hypot((x - width * .5) / (width * .55), (y - height * .4) / (height * .6));
+      ctx.globalAlpha = Math.max(0, 1 - distance) * (.2 + Math.sin(time * .3 + i) * .08);
+      ctx.fillStyle = i % 3 === 0 ? '#f9b4dd' : '#b18ad1';
+      const size = i % 23 === 0 ? 3 : 1;
       ctx.fillRect(Math.round(x), Math.round(y), size, size);
     }
+    ctx.globalAlpha = 1;
   }
   function tick(now) {
     frame = 0;

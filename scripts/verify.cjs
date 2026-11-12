@@ -33,26 +33,20 @@ const server = http.createServer((req,res) => {
     await page.waitForFunction(()=>getComputedStyle(document.querySelector('.loader')).visibility==='hidden');
     await page.waitForFunction(()=>[...document.querySelectorAll('.title-char')].every(el=>el.getAnimations().every(animation=>animation.playState==='finished')));
     checks.push('Loading screen exits');
-    assert.equal(await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(255, 249, 239)');
+    assert.equal(await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(33, 23, 47)');
     assert.equal(await page.locator('.character-cyber-kit').evaluate(el=>getComputedStyle(el).display),'block');
-    checks.push('Original cream theme and cyberpunk Miko visor render');
+    checks.push('Plum and pink redesign, original illustration, and Miko render');
     assert(await page.locator('.title-char').count()>20,'The hero title should reveal in individual characters');
-    await page.mouse.move(1000,130);
-    await page.waitForTimeout(400);
-    const droneBefore=await page.locator('.cursor-drone').evaluate(el=>getComputedStyle(el).transform);
-    await page.mouse.move(350,130);
-    await page.waitForTimeout(400);
-    assert.notEqual(await page.locator('.cursor-drone').evaluate(el=>getComputedStyle(el).transform),droneBefore,'Satellite should follow the pointer');
     const trackBefore=await page.locator('.focus-track').evaluate(el=>getComputedStyle(el).transform);
     await page.waitForTimeout(160);
     assert.notEqual(await page.locator('.focus-track').evaluate(el=>getComputedStyle(el).transform),trackBefore,'Focus strip should scroll automatically');
     assert.equal(await page.locator('.character-art .character-ear').count(),2);
     assert.equal(await page.locator('.character-art .character-tail').count(),1);
     assert.equal(await page.locator('.character-art .character-hair').count(),0,'Avatar should be replaced with the original fox mascot');
-    checks.push('Original Miko fox mascot; individual title reveal, pointer-following satellite, and moving focus strip work');
+    checks.push('Miko, title reveal, illustrated scene, and moving focus strip work');
     assert.equal(await page.locator('.project-card').count(),6);
     assert.equal(await page.locator('link[rel="icon"]').getAttribute('href'),'assets/favicon.svg');
-    assert.deepEqual(await page.locator('.nav-left a').allTextContents(),['About','Selected work','Approach']);
+    assert.deepEqual(await page.locator('.nav-left a').allTextContents(),['What I build','Selected work','How I work']);
     assert.equal(await page.locator('.docksy-visual').getAttribute('href'),'https://github.com/naufalamr17/docksy');
     assert.equal(await page.locator('.docksy-visual').getAttribute('target'),'_blank');
     assert.equal(await page.locator('.mlp-visual').getAttribute('href'),'https://mlpmining.com/');
@@ -62,7 +56,7 @@ const server = http.createServer((req,res) => {
     assert.deepEqual(await page.evaluate(()=>[...document.querySelectorAll('a[href^="#"]')].map(a=>a.getAttribute('href')).filter(h=>!document.getElementById(h.slice(1)))),[]);
     await page.locator('#motion-toggle').click();
     assert.equal(await page.locator('#motion-toggle').getAttribute('aria-pressed'),'true');
-    for(const selector of ['.character-art','.character-eyes','.character-tail','.character-ear','.character-paw-wave','.character-shadow','.character-route','.focus-track','.flow-packets','.flow-square']) {
+    for(const selector of ['.character-art','.character-eyes','.character-tail','.character-ear','.character-paw-wave','.character-route','.focus-track','.scene-monitor','.scene-project','.scene-signal']) {
       assert(await page.locator(selector).evaluateAll(elements=>elements.every(el=>getComputedStyle(el).animationPlayState==='paused')),`${selector} should pause`);
     }
     const stoppedTrack=await page.locator('.focus-track').evaluate(el=>getComputedStyle(el).transform);
@@ -72,7 +66,7 @@ const server = http.createServer((req,res) => {
       assert.match(await page.locator(selector).evaluate(el=>getComputedStyle(el).cursor),/pixel-arrow\.svg/,`Pixel cursor missing on ${selector}`);
     }
     await page.clock.install({time:new Date('2026-01-01T00:00:00Z')});
-    await page.clock.pauseAt(new Date('2026-01-01T00:00:10Z'));
+    await page.clock.pauseAt(new Date('2026-01-01T00:01:00Z'));
     await page.locator('#snake-trigger').click();
     assert.equal(await page.locator('#snake-dialog').evaluate(el=>el.open),true);
     assert.equal(await page.locator('.snake-controls').isVisible(),false);
@@ -100,6 +94,8 @@ const server = http.createServer((req,res) => {
     assert.equal(await page.locator('#particle-field').evaluate(el=>el.toDataURL()),pausedField,'Hero animation should pause');
     await page.clock.resume();
     checks.push('All decorative animations pause together; pixel cursor throughout; Snake moves every 240 ms');
+    await page.evaluate(()=>scrollTo({top:0,behavior:'instant'}));
+    await page.waitForTimeout(450);
     await page.screenshot({path:path.join(qa,'portfolio-desktop.png')});
     await page.evaluate(()=>scrollTo({top:360,behavior:'instant'}));
     await page.waitForTimeout(100);
@@ -140,6 +136,24 @@ const server = http.createServer((req,res) => {
       assert.equal(await link.evaluate(el=>el===document.activeElement),true);
     }
     checks.push('Three app image previews open; Docksy and public websites link out; Escape closes and restores focus');
+    for(const slug of ['docs','web','apps']) {
+      await page.locator(`[data-service="${slug}"]`).click();
+      assert.equal(await page.locator('.service-panel:visible').count(),1);
+      assert.equal(await page.locator(`[data-service="${slug}"]`).getAttribute('aria-selected'),'true');
+      await page.locator(`#panel-${slug} img`).evaluate(img=>img.decode());
+    }
+    await page.locator('[data-service="apps"]').focus();
+    await page.keyboard.press('ArrowRight');
+    assert.equal(await page.locator('[data-service="docs"]').getAttribute('aria-selected'),'true');
+    assert.equal(await page.locator('[data-service="docs"]').evaluate(el=>el===document.activeElement),true);
+    await page.keyboard.press('End');
+    assert.equal(await page.locator('[data-service="web"]').getAttribute('aria-selected'),'true');
+    await page.keyboard.press('ArrowRight');
+    assert.equal(await page.locator('[data-service="apps"]').getAttribute('aria-selected'),'true');
+    await page.keyboard.press('End');
+    await page.keyboard.press('Home');
+    assert.equal(await page.locator('[data-service="apps"]').getAttribute('aria-selected'),'true');
+    checks.push('Service panels switch with click, arrow keys, Home/End; hidden previews load when selected');
     for(const el of await page.locator('.reveal').all()) {await el.scrollIntoViewIfNeeded();await page.waitForTimeout(60);}
     await page.waitForTimeout(950);
     assert.deepEqual(await page.evaluate(()=>[...document.querySelectorAll('img[src]')].filter(img=>!img.complete||img.naturalWidth===0).map(img=>img.src)),[]);
@@ -157,14 +171,26 @@ const server = http.createServer((req,res) => {
         const originalTime=animation.currentTime;
         const copy=document.querySelector('.hero-copy').getBoundingClientRect();
         let clear=true;
-        for(const time of [3000,6600,7140,7680,8040,13260,13620,14160,14700,15240,21000]) {
+        for(const time of [0,1200,2400,3600,4800]) {
           animation.currentTime=time;
           const sprite=el.getBoundingClientRect();
           clear=clear&&sprite.left>=0&&sprite.right<=innerWidth&&(sprite.top>=copy.bottom||sprite.left>=copy.right);
         }
         animation.currentTime=originalTime;
         return clear;
-      }),`Mascot jump crosses the title or leaves the viewport at ${width}px`);
+      }),`Mascot overlaps the title or leaves the viewport at ${width}px`);
+      assert(await page.locator('.character-label').evaluate(el=>{
+        const label=el.getBoundingClientRect(),note=document.querySelector('.monitor-note').getBoundingClientRect();
+        return label.right<=note.left||label.left>=note.right||label.bottom<=note.top||label.top>=note.bottom;
+      }),`Miko caption overlaps illustration text at ${width}px`);
+      assert(await page.locator('.character-art').evaluate(el=>{
+        const mascot=el.getBoundingClientRect();
+        return [...document.querySelectorAll('.monitor-heading,.build-pipeline,.monitor-note')].filter(item=>getComputedStyle(item).display!=='none').every(item=>{
+          const text=item.getBoundingClientRect();
+          return mascot.right<=text.left||mascot.left>=text.right||mascot.bottom<=text.top||mascot.top>=text.bottom;
+        });
+      }),`Miko obscures illustration content at ${width}px`);
+      assert(await page.locator('h1').evaluate(el=>{const range=document.createRange();range.selectNodeContents(el);const rect=range.getBoundingClientRect();return rect.left>=0&&rect.right<=innerWidth;}),`Headline leaves the viewport at ${width}px`);
       checks.push(`No overflow at ${width}px`);
       if(width===390) {
         await page.screenshot({path:path.join(qa,'portfolio-mobile.png')});
@@ -196,20 +222,18 @@ const server = http.createServer((req,res) => {
     assert.equal(await page.locator('.loader').evaluate(el=>getComputedStyle(el).display),'none');
     assert.equal(await page.locator('#motion-toggle').isVisible(),false);
     assert.equal(await page.locator('.reveal.pending').count(),0);
-    for(const selector of ['.character-art','.character-eyes','.character-tail','.character-ear','.character-paw-wave','.character-shadow','.character-route','.focus-track','.flow-packets','.title-char']) {
+    for(const selector of ['.character-art','.character-eyes','.character-tail','.character-ear','.character-paw-wave','.character-route','.focus-track','.scene-monitor','.scene-project','.scene-signal','.title-char']) {
       assert.equal(await page.locator(selector).first().evaluate(el=>getComputedStyle(el).animationName),'none',`${selector} should respect reduced motion`);
     }
-    const quietDrone=await page.locator('.cursor-drone').evaluate(el=>getComputedStyle(el).transform);
-    await page.mouse.move(600,140);
-    await page.waitForTimeout(100);
-    assert.equal(await page.locator('.cursor-drone').evaluate(el=>getComputedStyle(el).transform),quietDrone);
-    checks.push('Reduced motion disables title, mascot, satellite tracking, marquee, workflow, reveals, and canvas animation');
+    checks.push('Reduced motion disables title, mascot, illustration, ribbon, reveals, and canvas animation');
     assert.deepEqual(errors,[]);
     checks.push('No browser errors, missing assets, or external runtime requests');
     const offline=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});
     const plain=await offline.newPage();await plain.goto(url);await plain.waitForTimeout(1600);
     assert.equal(await plain.locator('.project-card:visible').count(),6);
     assert.equal(await plain.locator('.filters').isVisible(),false);
+    assert.equal(await plain.locator('.service-panel:visible').count(),3);
+    assert.equal(await plain.locator('.service-tabs').isVisible(),false);
     assert.equal(await plain.locator('#navigation a[href="#projects"]').isVisible(),true);
     await plain.locator('[data-preview]').first().click();
     assert(plain.url().endsWith('/health-portfolio.png'));
